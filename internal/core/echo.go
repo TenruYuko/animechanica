@@ -8,11 +8,14 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"crypto/rand"
 
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/goccy/go-json"
 	"github.com/labstack/echo/v4"
+	echoSession "github.com/labstack/echo-contrib/session"
+	"github.com/gorilla/sessions"
 )
 
 func NewEchoApp(app *App, webFS *embed.FS) *echo.Echo {
@@ -21,6 +24,16 @@ func NewEchoApp(app *App, webFS *embed.FS) *echo.Echo {
 	e.HidePort = true
 	e.Debug = false
 	e.JSONSerializer = &CustomJSONSerializer{}
+
+	// --- SESSION MIDDLEWARE SETUP ---
+	// Generate a strong random key for cookie encryption (should be persisted in production)
+	key := make([]byte, 32)
+	_, err := rand.Read(key)
+	if err != nil {
+		log.Fatal("unable to generate session key:", err)
+	}
+	e.Use(echoSession.Middleware(sessions.NewCookieStore(key)))
+	// --- END SESSION MIDDLEWARE ---
 
 	distFS, err := fs.Sub(webFS, "web")
 	if err != nil {
@@ -68,6 +81,7 @@ func NewEchoApp(app *App, webFS *embed.FS) *echo.Echo {
 
 	return e
 }
+
 
 type CustomJSONSerializer struct{}
 

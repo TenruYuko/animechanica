@@ -1,13 +1,10 @@
 import { TauriManager } from "@/app/(main)/_tauri/tauri-manager"
 import { ClientProviders } from "@/app/client-providers"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
 import React from "react"
 
 export const dynamic = "force-static"
-
-const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
     title: "Seanime",
@@ -25,7 +22,7 @@ export default function RootLayout({ children }: {
         {/*<head>*/}
         {/*    {process.env.NODE_ENV === "development" && <script src="https://unpkg.com/react-scan/dist/auto.global.js" async></script>}*/}
         {/*</head>*/}
-        <body className={inter.className} suppressHydrationWarning>
+        <body className="font-sans" suppressHydrationWarning>
         {/*{process.env.NODE_ENV === "development" && <script src="http://localhost:8097"></script>}*/}
         <ClientProviders>
             {process.env.NEXT_PUBLIC_PLATFORM === "desktop" && <TauriManager />}

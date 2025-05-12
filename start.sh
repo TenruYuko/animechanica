@@ -1,0 +1,1 @@
+./seanime --datadir /aeternae/configurations/animechanica/data
