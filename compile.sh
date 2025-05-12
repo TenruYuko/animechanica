@@ -39,20 +39,8 @@ if ! version_gte "$GO_VERSION" "$REQUIRED_GO_VERSION"; then
   exit 1
 fi
 
-echo "Go version $GO_VERSION detected."
-
-# Build Go backend
-printf '\n[1/4] Building Go backend...\n'
-go build ./...
-if [ $? -eq 0 ]; then
-  echo "Go backend build succeeded."
-else
-  echo "Go backend build failed."
-  exit 1
-fi
-
 # Build Web Frontend (Next.js)
-printf '\n[2/4] Installing dependencies and building web frontend...\n'
+printf '\n[1/4] Installing dependencies and building web frontend...\n'
 cd seanime-web
 npm install
 if [ $? -ne 0 ]; then
@@ -69,19 +57,22 @@ fi
 
 cd ..
 
+
+echo "Go version $GO_VERSION detected."
+
 # Ensure web assets are available for Go embed
-printf '\n[2.5/4] Linking web assets for Go embed...\n'
+printf '\n[2/4] Copying web assets for Go embed...\n'
 if [ -L web ]; then
   rm web
 fi
 if [ -e web ]; then
   rm -rf web
 fi
-ln -s seanime-web/out web
+cp -r seanime-web/out web
 if [ $? -eq 0 ]; then
-  echo "Symlinked ./web to ./seanime-web/out for Go embed."
+  echo "Copied ./seanime-web/out to ./web for Go embed."
 else
-  echo "Failed to create symlink for web assets."
+  echo "Failed to copy web assets."
   exit 1
 fi
 
