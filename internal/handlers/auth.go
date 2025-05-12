@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
+	"github.com/gorilla/sessions"
+	echoSession "github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,6 +22,11 @@ import (
 //	@route /api/v1/auth/login [POST]
 //	@returns handlers.Status
 func (h *Handler) HandleLogin(c echo.Context) error {
+	// Get session
+	sess, err := echoSession.Get("session", c)
+	if err != nil {
+		return h.RespondWithError(c, err)
+	}
 
 	type body struct {
 		Token string `json:"token"`
@@ -28,6 +35,18 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 	var b body
 
 	if err := c.Bind(&b); err != nil {
+		return h.RespondWithError(c, err)
+	}
+
+	// Store AniList token in session
+	sess.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   60 * 60 * 24, // 1 day
+		HttpOnly: true,
+		Secure:   true,
+	} // use gorilla/sessions.Options
+	sess.Values["anilist_token"] = b.Token
+	if err := sess.Save(c.Request(), c.Response()); err != nil {
 		return h.RespondWithError(c, err)
 	}
 
@@ -84,7 +103,6 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 
 	// Return new status
 	return h.RespondWithData(c, status)
-
 }
 
 // HandleLogout
@@ -95,8 +113,21 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 //	@route /api/v1/auth/logout [POST]
 //	@returns handlers.Status
 func (h *Handler) HandleLogout(c echo.Context) error {
+	// Get session
+	sess, err := echoSession.Get("session", c)
+	if err != nil {
+		return h.RespondWithError(c, err)
+	}
 
-	_, err := h.App.Database.UpsertAccount(&models.Account{
+	// Remove token from session and invalidate cookie
+	delete(sess.Values, "anilist_token")
+	sess.Options.MaxAge = -1
+	if err := sess.Save(c.Request(), c.Response()); err != nil {
+		return h.RespondWithError(c, err)
+	}
+
+	err = nil // reuse err var, not :=
+	_, err = h.App.Database.UpsertAccount(&models.Account{
 		BaseModel: models.BaseModel{
 			ID:        1,
 			UpdatedAt: time.Now(),

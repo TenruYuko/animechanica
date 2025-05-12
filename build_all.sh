@@ -3,6 +3,8 @@
 # Usage: bash build_all.sh
 set -e
 
+cd "$(dirname "$0")"
+
 # Colors for output
 green='\033[0;32m'
 red='\033[0;31m'

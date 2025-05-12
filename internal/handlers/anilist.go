@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"seanime/internal/api/anilist"
 	"seanime/internal/events"
+	"seanime/internal/handlers/session_util"
 	"seanime/internal/util/result"
 	"strconv"
 	"time"
@@ -312,6 +313,10 @@ func (h *Handler) HandleAnilistListAnime(c echo.Context) error {
 		return h.RespondWithData(c, cached)
 	}
 
+	token, err := session_util.GetAniListTokenFromSession(c)
+	if err != nil || token == "" {
+		return h.RespondWithError(c, errors.New("no AniList token in session; please log in"))
+	}
 	ret, err := anilist.ListAnimeM(
 		p.Page,
 		p.Search,
@@ -325,7 +330,7 @@ func (h *Handler) HandleAnilistListAnime(c echo.Context) error {
 		p.Format,
 		&isAdult,
 		h.App.Logger,
-		h.App.GetAccountToken(),
+		token,
 	)
 	if err != nil {
 		return h.RespondWithError(c, err)
@@ -373,6 +378,10 @@ func (h *Handler) HandleAnilistListRecentAiringAnime(c echo.Context) error {
 		return h.RespondWithData(c, cached)
 	}
 
+	token, err := session_util.GetAniListTokenFromSession(c)
+	if err != nil || token == "" {
+		return h.RespondWithError(c, errors.New("no AniList token in session; please log in"))
+	}
 	ret, err := anilist.ListRecentAiringAnimeM(
 		p.Page,
 		p.Search,
@@ -382,7 +391,7 @@ func (h *Handler) HandleAnilistListRecentAiringAnime(c echo.Context) error {
 		p.NotYetAired,
 		p.Sort,
 		h.App.Logger,
-		h.App.GetAccountToken(),
+		token,
 	)
 	if err != nil {
 		return h.RespondWithError(c, err)
@@ -418,10 +427,14 @@ func (h *Handler) HandleAnilistListMissedSequels(c echo.Context) error {
 		return h.RespondWithError(c, err)
 	}
 
+	token, err := session_util.GetAniListTokenFromSession(c)
+	if err != nil || token == "" {
+		return h.RespondWithError(c, errors.New("no AniList token in session; please log in"))
+	}
 	ret, err := anilist.ListMissedSequels(
 		animeCollection,
 		h.App.Logger,
-		h.App.GetAccountToken(),
+		token,
 	)
 	if err != nil {
 		return h.RespondWithError(c, err)
@@ -448,9 +461,14 @@ func (h *Handler) HandleGetAniListStats(c echo.Context) error {
 		return h.RespondWithData(c, cached)
 	}
 
+	token, err := session_util.GetAniListTokenFromSession(c)
+	if err != nil || token == "" {
+		return h.RespondWithError(c, errors.New("no AniList token in session; please log in"))
+	}
+	client := anilist.NewAnilistClient(token)
 	ret, err := anilist.GetStats(
 		c.Request().Context(),
-		h.App.AnilistClient,
+		client,
 	)
 	if err != nil {
 		return h.RespondWithError(c, err)
