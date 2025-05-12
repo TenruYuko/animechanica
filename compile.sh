@@ -66,7 +66,34 @@ else
   echo "Web frontend build failed."
   exit 1
 fi
+
 cd ..
+
+# Ensure web assets are available for Go embed
+printf '\n[2.5/4] Linking web assets for Go embed...\n'
+if [ -L web ]; then
+  rm web
+fi
+if [ -e web ]; then
+  rm -rf web
+fi
+ln -s seanime-web/out web
+if [ $? -eq 0 ]; then
+  echo "Symlinked ./web to ./seanime-web/out for Go embed."
+else
+  echo "Failed to create symlink for web assets."
+  exit 1
+fi
+
+# Build Go backend (after web assets are in place)
+printf '\n[3/4] Building Go backend...\n'
+go build ./...
+if [ $? -eq 0 ]; then
+  echo "Go backend build succeeded."
+else
+  echo "Go backend build failed."
+  exit 1
+fi
 
 # Build Desktop Frontend (Tauri)
 printf '\n[3/4] Installing dependencies and building desktop frontend...\n'
