@@ -70,7 +70,7 @@ const (
 	categoryAnime       = "&c=1_0"
 	CategoryAnime       = "&c=1_0"
 	categoryAnimeAMV    = "&c=1_1"
-	categoryAnimeEng    = "&c=1_2"
+	CategoryAnimeEnd    = "&c=1_2"
 	CategoryAnimeEng    = "&c=1_2"
 	categoryAnimeNonEng = "&c=1_3"
 	CategoryAnimeNonEng = "&c=1_3"
