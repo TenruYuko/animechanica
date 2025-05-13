@@ -1,5 +1,6 @@
 "use client"
 import { MainLayout } from "@/app/(main)/_features/layout/main-layout"
+import { AnilistAuthProvider } from "@/app/(main)/_features/layout/anilist-auth-provider"
 import { OfflineLayout } from "@/app/(main)/_features/layout/offline-layout"
 import { TopNavbar } from "@/app/(main)/_features/layout/top-navbar"
 import { useServerStatus } from "@/app/(main)/_hooks/use-server-status"
@@ -37,7 +38,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div data-main-layout-container className="h-auto">
                     <TopNavbar />
                     <div data-main-layout-content>
-                        {children}
+                        <AnilistAuthProvider>
+                          {children}
+                        </AnilistAuthProvider>
                     </div>
                 </div>
             </MainLayout>
