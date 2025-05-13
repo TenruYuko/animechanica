@@ -222,6 +222,7 @@ export function AnimeEntryPage() {
                                 bottomSection={<>
                                     <MediaEntryCharactersSection details={animeDetails} />
                                     <RelationsRecommendationsSection entry={animeEntry} details={animeDetails} />
+<FamilyTreeSection relations={[]} />
                                 </>}
                             />
                         </PageWrapper>}
@@ -244,6 +245,7 @@ export function AnimeEntryPage() {
                                 bottomSection={<>
                                     <MediaEntryCharactersSection details={animeDetails} />
                                     <RelationsRecommendationsSection entry={animeEntry} details={animeDetails} />
+<FamilyTreeSection relations={[]} />
                                 </>}
                             />
                         </PageWrapper>}
@@ -266,6 +268,7 @@ export function AnimeEntryPage() {
                                 bottomSection={<>
                                     <MediaEntryCharactersSection details={animeDetails} />
                                     <RelationsRecommendationsSection entry={animeEntry} details={animeDetails} />
+<FamilyTreeSection relations={[]} />
                                 </>}
                             />
                         </PageWrapper>}
