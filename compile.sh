@@ -11,7 +11,7 @@ cd ..
 if [ -d "web" ]; then
   rm -rf web
 fi
-cp -r seanime-web/out web
+cp -r seanime-webc/out web
 
 # Also copy built web assets to the data assets directory for the server
 DATA_ASSETS_DIR="/aeternae/configurations/animechanica/data/assets"
