@@ -11,9 +11,11 @@ import (
 
 // HandleAniListOAuthCallback handles the OAuth callback and exchanges code for token
 func (h *Handler) HandleAniListOAuthCallback(c echo.Context) error {
-	code := c.QueryParam("code")
-	if code == "" {
-		return c.String(http.StatusBadRequest, "Missing code parameter")
+	var req struct {
+		Code string `json:"code"`
+	}
+	if err := c.Bind(&req); err != nil || req.Code == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Missing or invalid code in request body"})
 	}
 
 	clientID := os.Getenv("ANILIST_CLIENT_ID")
@@ -23,37 +25,26 @@ func (h *Handler) HandleAniListOAuthCallback(c echo.Context) error {
 	if clientSecret == "" { clientSecret = "eOXJYYPnOLQhwTudR3wrakUfMZgRi6U5dyHMcyYw" }
 	if redirectURI == "" { redirectURI = "http://localhost:43211/auth/callback" }
 
-	// Prepare request body
 	body := map[string]string{
 		"grant_type": "authorization_code",
 		"client_id": clientID,
 		"client_secret": clientSecret,
 		"redirect_uri": redirectURI,
-		"code": code,
+		"code": req.Code,
 	}
 	jsonBody, _ := json.Marshal(body)
 
-	// Exchange code for token
 	resp, err := http.Post("https://anilist.co/api/v2/oauth/token", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "Failed to exchange code: "+err.Error())
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to exchange code", "details": err.Error()})
 	}
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 
 	if resp.StatusCode != 200 {
-		return c.String(resp.StatusCode, string(respBody))
+		return c.JSON(resp.StatusCode, map[string]string{"error": "AniList token exchange failed", "details": string(respBody)})
 	}
 
-	// Parse access token from AniList response
-	type AniListTokenResponse struct {
-		AccessToken string `json:"access_token"`
-	}
-	var tokenResp AniListTokenResponse
-	if err := json.Unmarshal(respBody, &tokenResp); err != nil || tokenResp.AccessToken == "" {
-		return c.String(http.StatusInternalServerError, "Failed to parse AniList access token: "+string(respBody))
-	}
-
-	// Redirect to frontend callback with token
-	return c.Redirect(http.StatusFound, "/auth/callback?token="+tokenResp.AccessToken)
+	return c.JSON(http.StatusOK, json.RawMessage(respBody))
 }
+

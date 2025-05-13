@@ -128,7 +128,7 @@ func SetupRoutes(e *echo.Echo, app *core.App) {
 	// Auth
 	v1.POST("/auth/login", h.HandleLogin)
 	v1.POST("/auth/logout", h.HandleLogout)
-	v1.GET("/auth/anilist/callback", h.HandleAniListOAuthCallback)
+	v1.POST("/auth/anilist/callback", h.HandleAniListOAuthCallback)
 
 	// Settings
 	v1.GET("/settings", h.HandleGetSettings)

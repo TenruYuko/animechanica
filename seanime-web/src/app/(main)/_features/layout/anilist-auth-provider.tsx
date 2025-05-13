@@ -15,8 +15,13 @@ export function AnilistAuthProvider({ children }: { children: React.ReactNode })
     if (stored) {
       setToken(stored);
     } else {
-      // No token, redirect to login page
-      if (typeof window !== "undefined" && window.location.pathname !== "/auth/login") {
+      // No token, redirect to login page, but allow /oauth-debug-guide
+      if (
+        typeof window !== "undefined" &&
+        window.location.pathname !== "/auth/login" &&
+        !window.location.pathname.startsWith("/debug") &&
+        window.location.pathname !== "/oauth-debug-guide"
+      ) {
         window.location.href = "/auth/login";
       }
     }

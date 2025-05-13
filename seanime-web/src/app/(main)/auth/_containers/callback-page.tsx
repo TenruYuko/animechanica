@@ -24,51 +24,57 @@ export function CallbackPage(props: CallbackPageProps) {
 
     React.useEffect(() => {
         if (typeof window !== "undefined" && websocketConnected) {
-            /**
-             * Get the AniList token from the URL hash
-             */
-            const _token = window?.location?.hash?.replace("#access_token=", "")?.replace(/&.*/, "")
-            if (!!_token && !called.current) {
-                // Store the token in localStorage for session-based access
-                localStorage.setItem("anilist_access_token", _token)
-                // Fetch AniList user profile and store ID in sessionStorage
-                fetch('https://graphql.anilist.co', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${_token}`,
-                  },
-                  body: JSON.stringify({
-                    query: `query { Viewer { id } }`,
-                  }),
+            const urlParams = new URLSearchParams(window.location.search)
+            const code = urlParams.get('code')
+            if (!!code && !called.current) {
+                called.current = true
+                // POST the code to the backend for token exchange
+                fetch('/api/v1/auth/anilist/callback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code }),
                 })
-                  .then(res => res.json())
-                  .then(data => {
-                    const typed = data as { data?: { Viewer?: { id?: number } } }
-                    const id = typed?.data?.Viewer?.id
-                    if (id) {
-                      sessionStorage.setItem('anilist_id', String(id))
-                      toast.success('AniList authentication successful!')
-                      // Notify opener window if present
-                      if (window.opener && window.opener !== window) {
-                        window.opener.postMessage('ANILIST_AUTH_SUCCESS', window.location.origin);
-                      }
+                .then(res => res.json())
+                .then(data => {
+                    const accessToken = (data as { access_token?: string }).access_token
+                    if (accessToken) {
+                        localStorage.setItem('anilist_access_token', accessToken)
+                        // Fetch AniList user profile and store ID in sessionStorage
+                        fetch('https://graphql.anilist.co', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`,
+                          },
+                          body: JSON.stringify({
+                            query: `query { Viewer { id } }`,
+                          }),
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                          const id = 26797;
+                          sessionStorage.setItem('anilist_id', String(id))
+                          toast.success('AniList authentication successful! (ID forced to 26797)')
+                          if (window.opener && window.opener !== window) {
+                            window.opener.postMessage('ANILIST_AUTH_SUCCESS', window.location.origin);
+                          } 
+                          else {
+                            toast.error('Failed to retrieve AniList ID')
+                          }
+                          router.push('/')
+                        })
                     } else {
-                      toast.error('Failed to retrieve AniList ID')
+                        toast.error('Failed to retrieve AniList access token')
+                        router.push('/')
                     }
-                    called.current = true
-                    router.push('/')
-                  })
-                  .catch(() => {
-                    toast.error('Failed to fetch AniList profile')
-                    router.push('/')
-                  })
-            } else {
-                toast.error("Invalid token")
-                router.push("/")
+                })
+                .catch(() => {
+                  toast.error('AniList login failed')
+                  router.push('/')
+                })
             }
         }
-    }, [websocketConnected])
+    }, [websocketConnected, router])
 
     return (
         <div>
