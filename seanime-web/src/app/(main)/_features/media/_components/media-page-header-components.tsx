@@ -100,42 +100,12 @@ export function MediaPageHeader(props: MediaPageHeaderProps) {
             <div
                 data-media-page-header-banner
                 className={cn(
-                    "w-full scroll-locked-offset flex-none object-cover object-center z-[3] bg-[--background] h-[20rem]",
-                    ts.mediaPageBannerSize === ThemeMediaPageBannerSize.Small ? "lg:h-[28rem]" : "h-[20rem] lg:h-[32rem] 2xl:h-[40rem]",
-                    ts.libraryScreenCustomBackgroundImage ? "absolute -top-[5rem]" : "fixed transition-opacity top-0 duration-1000",
-                    !ts.libraryScreenCustomBackgroundImage && y > 100 && (ts.enableMediaPageBlurredBackground ? "opacity-0" : shouldDimBanner
-                        ? "opacity-15"
-                        : "opacity-5"),
-                    !ts.disableSidebarTransparency && TRANSPARENT_SIDEBAR_BANNER_IMG_STYLE,
-                    shouldHideBanner && "bg-transparent",
+                    "w-full scroll-locked-offset flex-none object-cover object-center z-[3] bg-[--background] h-[20rem] lg:h-[32rem] 2xl:h-[40rem] fixed transition-opacity top-0 duration-1000 lg:w-[calc(100%_+_5rem)] lg:left-[-5rem]"
                 )}
             >
-                {/*TOP FADE*/}
-                <div
-                    data-media-page-header-banner-top-gradient
-                    className={cn(
-                        "w-full absolute z-[2] top-0 h-[8rem] opacity-40 bg-gradient-to-b from-[--background] to-transparent via",
-                    )}
-                />
-
-                {/*BOTTOM OVERFLOW FADE*/}
-                <div
-                    data-media-page-header-banner-bottom-gradient
-                    className={cn(
-                        "w-full z-[2] absolute scroll-locked-offset bottom-[-5rem] h-[5em] bg-gradient-to-b from-[--background] via-transparent via-100% to-transparent",
-                        !ts.disableSidebarTransparency && TRANSPARENT_SIDEBAR_BANNER_IMG_STYLE,
-                        shouldHideBanner && "hidden",
-                    )}
-                />
-
-                <div
-                    data-media-page-header-banner-image-container
-                    className={cn(
-                        "absolute top-0 left-0 scroll-locked-offset w-full h-full",
-                        // shouldBlurBanner && "blur-xl",
-                        shouldHideBanner && "hidden",
-                    )}
-                >
+                <div data-media-page-header-banner-top-gradient className="w-full absolute z-[2] top-0 h-[8rem] opacity-40 bg-gradient-to-b from-[--background] to-transparent via"></div>
+                <div data-media-page-header-banner-bottom-gradient className="w-full z-[2] absolute scroll-locked-offset bottom-[-5rem] h-[5em] bg-gradient-to-b from-[--background] via-transparent via-100% to-transparent lg:w-[calc(100%_+_5rem)] lg:left-[-5rem]"></div>
+                <div data-media-page-header-banner-image-container className="absolute top-0 left-0 scroll-locked-offset w-full h-full">
                     {(!!bannerImage) && <Image
                         data-media-page-header-banner-image
                         src={getImageUrl(bannerImage || "")}
@@ -144,52 +114,13 @@ export function MediaPageHeader(props: MediaPageHeaderProps) {
                         quality={100}
                         priority
                         sizes="100vw"
-                        className={cn(
-                            "object-cover object-center scroll-locked-offset z-[1]",
-                            shouldDimBanner && "opacity-30",
-                        )}
+                        className="object-cover object-center scroll-locked-offset z-[1]"
                     />}
-
-                    {shouldBlurBanner && <div
-                        data-media-page-header-banner-blur
-                        className="absolute top-0 w-full h-full backdrop-blur-xl z-[2] "
-                    ></div>}
-
-                    {/*LEFT MASK*/}
-                    <div
-                        data-media-page-header-banner-left-gradient
-                        className={cn(
-                            "hidden lg:block max-w-[60rem] xl:max-w-[100rem] w-full z-[2] h-full absolute left-0 bg-gradient-to-r from-[--background]  transition-opacity to-transparent",
-                            "opacity-85 duration-1000",
-                            // y > 300 && "opacity-70",
-                        )}
-                    />
-                    <div
-                        data-media-page-header-banner-right-gradient
-                        className={cn(
-                            "hidden lg:block max-w-[60rem] xl:max-w-[80rem] w-full z-[2] h-full absolute left-0 bg-gradient-to-r from-[--background] from-25% transition-opacity to-transparent",
-                            "opacity-50 duration-500",
-                        )}
-                    />
+                    <div data-media-page-header-banner-left-gradient className="hidden lg:block max-w-[60rem] xl:max-w-[100rem] w-full z-[2] h-full absolute left-0 bg-gradient-to-r from-[--background] transition-opacity to-transparent opacity-85 duration-1000"></div>
+                    <div data-media-page-header-banner-right-gradient className="hidden lg:block max-w-[60rem] xl:max-w-[80rem] w-full z-[2] h-full absolute left-0 bg-gradient-to-r from-[--background] from-25% transition-opacity to-transparent opacity-50 duration-500"></div>
                 </div>
-
-                {/*BOTTOM FADE*/}
-                <div
-                    data-media-page-header-banner-bottom-gradient
-                    className={cn(
-                        "w-full z-[3] absolute bottom-0 h-[50%] bg-gradient-to-t from-[--background] via-transparent via-100% to-transparent",
-                        shouldHideBanner && "hidden",
-                    )}
-                />
-
-                <div
-                    data-media-page-header-banner-dim
-                    className={cn(
-                        "absolute h-full w-full block lg:hidden bg-[--background] opacity-70 z-[2]",
-                        shouldHideBanner && "hidden",
-                    )}
-                />
-
+                <div data-media-page-header-banner-bottom-gradient className="w-full z-[3] absolute bottom-0 h-[50%] bg-gradient-to-t from-[--background] via-transparent via-100% to-transparent"></div>
+                <div data-media-page-header-banner-dim className="absolute h-full w-full block lg:hidden bg-[--background] opacity-70 z-[2]"></div>
             </div>
         </motion.div>
     )
