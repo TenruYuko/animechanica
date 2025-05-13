@@ -1,4 +1,3 @@
-import { defaultLayoutIcons } from "@vidstack/react/layouts/default"
 import { LuCast, LuVolume1, LuVolume2, LuVolumeX } from "react-icons/lu"
 import {
     RiClosedCaptioningFill,
@@ -14,7 +13,6 @@ import {
 } from "react-icons/ri"
 
 export const vidstackLayoutIcons = {
-    ...defaultLayoutIcons,
     PlayButton: {
         Play: RiPlayLargeLine,
         Pause: RiPauseLargeLine,
@@ -37,7 +35,6 @@ export const vidstackLayoutIcons = {
         Exit: RiFullscreenExitLine,
     },
     Menu: {
-        ...defaultLayoutIcons["Menu"],
         Settings: RiSettings4Line,
     },
     CaptionButton: {

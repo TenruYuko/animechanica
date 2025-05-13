@@ -6064,7 +6064,7 @@ victory-vendor@^36.6.8:
     d3-time "^3.0.0"
     d3-timer "^3.0.1"
 
-vidstack@0.6.15:
+vidstack@^0.6.15, vidstack@0.6.15:
   version "0.6.15"
   resolved "https://registry.npmjs.org/vidstack/-/vidstack-0.6.15.tgz"
   integrity sha512-pI2aixBuOpu/LSnRgNJ40tU/KFW+x1X+O2bW1hz946ZZShDM5oqRXF9pavDOuckHAHPgUN9HYUr9vUNTBUPF1Q==

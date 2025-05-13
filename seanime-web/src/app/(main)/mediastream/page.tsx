@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { MediaPlayerInstance } from "@vidstack/react"
 import "@/app/vidstack-theme.css"
-import "@vidstack/react/styles/default.css"
+// TODO: Add custom player styles or use available Vidstack styles here.
 import { uniq } from "lodash"
 import { CaptionsFileFormat } from "media-captions"
 import { useRouter, useSearchParams } from "next/navigation"

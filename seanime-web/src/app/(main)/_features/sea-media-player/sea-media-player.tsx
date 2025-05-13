@@ -48,7 +48,7 @@ import {
     Track,
     type TrackProps,
 } from "@vidstack/react"
-import { DefaultVideoLayout, DefaultVideoLayoutProps } from "@vidstack/react/layouts/default"
+// TODO: Implement a custom video layout or use base MediaPlayer controls, as DefaultVideoLayout is not available in this Vidstack version.
 import { useAtomValue } from "jotai"
 import { useAtom } from "jotai/react"
 import mousetrap from "mousetrap"
