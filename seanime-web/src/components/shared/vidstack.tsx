@@ -1,4 +1,4 @@
-import { defaultLayoutIcons } from "@vidstack/react/player/layouts/default"
+import { defaultLayoutIcons } from "@vidstack/react/layouts/default"
 import { LuCast, LuVolume1, LuVolume2, LuVolumeX } from "react-icons/lu"
 import {
     RiClosedCaptioningFill,

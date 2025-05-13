@@ -27,7 +27,7 @@ import React from "react"
 import { FaSearch } from "react-icons/fa"
 import { useUpdateEffect } from "react-use"
 import "@/app/vidstack-theme.css"
-import "@vidstack/react/player/styles/default/layouts/video.css"
+import "@vidstack/react/styles/default.css"
 import { PluginEpisodeGridItemMenuItems } from "../../_features/plugin/actions/plugin-actions"
 
 type OnlinestreamPageProps = {

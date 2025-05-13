@@ -52,6 +52,9 @@ var (
 	sukebeiView    = util.Decode("aHR0cHM6Ly9zdWtlYmVpLm55YWEuc2kvdmlldy8=")
 )
 
+// CategoryAnimeEnd is the category code for anime torrents (end marker)
+const CategoryAnimeEnd = "1_37"
+
 const (
 	sortByComments  = "&s=comments&o=desc"
 	sortBySeeders   = "&s=seeders&o=desc"

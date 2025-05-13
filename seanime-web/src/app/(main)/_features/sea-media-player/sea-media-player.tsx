@@ -48,7 +48,7 @@ import {
     Track,
     type TrackProps,
 } from "@vidstack/react"
-import { DefaultVideoLayout, DefaultVideoLayoutProps } from "@vidstack/react/player/layouts/default"
+import { DefaultVideoLayout, DefaultVideoLayoutProps } from "@vidstack/react/layouts/default"
 import { useAtomValue } from "jotai"
 import { useAtom } from "jotai/react"
 import mousetrap from "mousetrap"
