@@ -312,6 +312,11 @@ func (h *Handler) HandleAnilistListAnime(c echo.Context) error {
 		return h.RespondWithData(c, cached)
 	}
 
+	token := getAniListTokenFromSession(c)
+	if token == "" {
+		return h.RespondWithError(c, errors.New("authentication required: AniList token missing"))
+	}
+
 	ret, err := anilist.ListAnimeM(
 		p.Page,
 		p.Search,
@@ -325,7 +330,7 @@ func (h *Handler) HandleAnilistListAnime(c echo.Context) error {
 		p.Format,
 		&isAdult,
 		h.App.Logger,
-		h.App.GetAccountToken(),
+		token,
 	)
 	if err != nil {
 		return h.RespondWithError(c, err)
@@ -373,6 +378,11 @@ func (h *Handler) HandleAnilistListRecentAiringAnime(c echo.Context) error {
 		return h.RespondWithData(c, cached)
 	}
 
+	token := getAniListTokenFromSession(c)
+	if token == "" {
+		return h.RespondWithError(c, errors.New("authentication required: AniList token missing"))
+	}
+
 	ret, err := anilist.ListRecentAiringAnimeM(
 		p.Page,
 		p.Search,
@@ -382,7 +392,7 @@ func (h *Handler) HandleAnilistListRecentAiringAnime(c echo.Context) error {
 		p.NotYetAired,
 		p.Sort,
 		h.App.Logger,
-		h.App.GetAccountToken(),
+		token,
 	)
 	if err != nil {
 		return h.RespondWithError(c, err)
@@ -421,7 +431,7 @@ func (h *Handler) HandleAnilistListMissedSequels(c echo.Context) error {
 	ret, err := anilist.ListMissedSequels(
 		animeCollection,
 		h.App.Logger,
-		h.App.GetAccountToken(),
+		getAniListTokenFromSession(c),
 	)
 	if err != nil {
 		return h.RespondWithError(c, err)

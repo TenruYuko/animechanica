@@ -89,7 +89,7 @@ export function withControlledInput<T extends FieldBaseProps>(InputComponent: Re
                             onChange={callAllHandlers(inputProps.onChange, field.onChange)} // Default prop, can be overridden in Field component
                             onBlur={callAllHandlers(inputProps.onBlur, field.onBlur)} // Default prop, can be overridden in Field component
                             // required={required}
-                            {...inputProps} // Props passed in <FieldComponent /> then props passed in <Field.Component />
+                            {...(inputProps as T)} // Type assertion to fix TS error
                             // The props below will not be overridden.
                             // e.g: <Field.ComponentField error="Error" /> will not work
                             error={getFormError(field.name, formState)?.message}
@@ -110,7 +110,7 @@ const withUncontrolledInput = <T extends FieldBaseProps>(InputComponent: React.F
 
             return (
                 <InputComponent
-                    {...props}
+                    {...(props as T)}
                     onChange={callAllHandlers(props.onChange, field.onChange)}
                     onBlur={callAllHandlers(props.onBlur, field.onBlur)}
                     error={getFormError(props.name, formState)?.message}

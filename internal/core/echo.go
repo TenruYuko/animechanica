@@ -82,6 +82,7 @@ func (j *CustomJSONSerializer) Deserialize(c echo.Context, i interface{}) error 
 }
 
 func RunEchoServer(app *App, e *echo.Echo) {
+	
 	app.Logger.Info().Msgf("app: Server Address: %s", app.Config.GetServerAddr())
 
 	// Start the server

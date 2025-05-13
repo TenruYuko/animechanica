@@ -13,13 +13,18 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
 	"github.com/ziflex/lecho/v3"
+	"github.com/labstack/echo-contrib/session"
+	"github.com/gorilla/sessions"
 )
 
 type Handler struct {
 	App *core.App
 }
 
-func InitRoutes(app *core.App, e *echo.Echo) {
+func SetupRoutes(e *echo.Echo, app *core.App) {
+	store := sessions.NewCookieStore([]byte("very-secret-key-change-me")) // TODO: Replace with secure key from config/env
+	e.Use(session.Middleware(store))
+
 	// CORS middleware
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"*"},

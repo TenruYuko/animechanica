@@ -92,7 +92,7 @@ appLoop:
 			echoApp := core.NewEchoApp(app, webFS)
 
 			// Initialize the routes
-			handlers.InitRoutes(app, echoApp)
+			handlers.SetupRoutes(echoApp, app)
 
 			// Run the server
 			core.RunEchoServer(app, echoApp)

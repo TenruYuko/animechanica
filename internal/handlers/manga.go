@@ -1,14 +1,29 @@
 package handlers
 
 import (
+	"errors"
 	"seanime/internal/api/anilist"
 	"seanime/internal/manga"
 	"seanime/internal/util/result"
 	"strconv"
 	"time"
 
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
+
+// Helper to get AniList token from session
+func getAniListTokenFromSession(c echo.Context) string {
+	sess, _ := session.Get("session", c)
+	token, ok := sess.Values["anilist_token"].(string)
+	if !ok || token == "" {
+		if c != nil && c.Logger() != nil {
+			c.Logger().Warn("AniList token missing in session")
+		}
+		return ""
+	}
+	return token
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -386,6 +401,11 @@ func (h *Handler) HandleAnilistListManga(c echo.Context) error {
 		return h.RespondWithData(c, cached)
 	}
 
+	token := getAniListTokenFromSession(c)
+	if token == "" {
+		return h.RespondWithError(c, errors.New("authentication required: AniList token missing"))
+	}
+
 	ret, err := anilist.ListMangaM(
 		p.Page,
 		p.Search,
@@ -399,7 +419,7 @@ func (h *Handler) HandleAnilistListManga(c echo.Context) error {
 		p.CountryOfOrigin,
 		&isAdult,
 		h.App.Logger,
-		h.App.GetAccountToken(),
+		token,
 	)
 	if err != nil {
 		return h.RespondWithError(c, err)

@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,16 +22,21 @@ import (
 //	@route /api/v1/auth/login [POST]
 //	@returns handlers.Status
 func (h *Handler) HandleLogin(c echo.Context) error {
-
+	sess, _ := session.Get("session", c)
 	type body struct {
 		Token string `json:"token"`
 	}
-
 	var b body
-
 	if err := c.Bind(&b); err != nil {
 		return h.RespondWithError(c, err)
 	}
+	sess.Values["anilist_token"] = b.Token
+	sess.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   60 * 60 * 24 * 7, // 1 week
+		HttpOnly: true,
+	}
+	sess.Save(c.Request(), c.Response())
 
 	// Set a new AniList client by passing to JWT token
 	h.App.UpdateAnilistClientToken(b.Token)
@@ -95,6 +102,10 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 //	@route /api/v1/auth/logout [POST]
 //	@returns handlers.Status
 func (h *Handler) HandleLogout(c echo.Context) error {
+	sess, _ := session.Get("session", c)
+	sess.Options.MaxAge = -1 // Invalidate session
+	sess.Save(c.Request(), c.Response())
+	return h.RespondWithData(c, true)
 
 	_, err := h.App.Database.UpsertAccount(&models.Account{
 		BaseModel: models.BaseModel{
