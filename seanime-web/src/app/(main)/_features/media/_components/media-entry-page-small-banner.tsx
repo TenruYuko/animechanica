@@ -22,16 +22,14 @@ export function MediaEntryPageSmallBanner(props: MediaEntryPageSmallBannerProps)
             <div
                 data-media-entry-page-small-banner
                 className={cn(
-                    "h-[30rem] w-full flex-none object-cover object-center absolute -top-[5rem] overflow-hidden bg-[--background] z-0", // Ensure banner is always behind
-
+                    "h-[30rem] w-full flex-none object-cover object-center absolute -top-[5rem] overflow-hidden bg-[--background]",
                     (ts.hideTopNavbar || process.env.NEXT_PUBLIC_PLATFORM === "desktop") && "h-[27rem]",
                     !ts.disableSidebarTransparency && TRANSPARENT_SIDEBAR_BANNER_IMG_STYLE,
                 )}
             >
-                {/* Black dim overlay for readability */}
                 <div
-                    data-media-entry-page-small-banner-dim
-                    className="w-full absolute z-0 top-0 left-0 h-full bg-black opacity-50 pointer-events-none"
+                    data-media-entry-page-small-banner-gradient
+                    className="w-full absolute z-[2] top-0 h-[8rem] opacity-40 bg-gradient-to-b from-[--background] to-transparent via"
                 />
                 <div data-media-entry-page-small-banner-image-container className="absolute w-full h-full">
                     {(!!bannerImage) && <Image
@@ -42,12 +40,12 @@ export function MediaEntryPageSmallBanner(props: MediaEntryPageSmallBannerProps)
                         quality={100}
                         priority
                         sizes="100vw"
-                        className="object-cover object-center z-0"
+                        className="object-cover object-center z-[1]"
                     />}
                 </div>
                 <div
                     data-media-entry-page-small-banner-bottom-gradient
-                    className="w-full absolute bottom-0 h-[32rem] bg-gradient-to-t from-[--background] via-[--background] via-50% to-transparent z-0"
+                    className="w-full z-[3] absolute bottom-0 h-[32rem] bg-gradient-to-t from-[--background] via-[--background] via-50% to-transparent"
                 />
 
             </div>
