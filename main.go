@@ -5,7 +5,7 @@ import (
 	"seanime/internal/server"
 )
 
-//go:embed all:web
+//go:embed all:web/*
 var WebFS embed.FS
 
 //go:embed internal/icon/logo.png
