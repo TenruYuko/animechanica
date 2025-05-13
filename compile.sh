@@ -13,11 +13,6 @@ if [ -d "web" ]; then
 fi
 cp -r seanime-web/out/* web/
 
-# Also copy built web assets to the data assets directory for the server
-DATA_ASSETS_DIR="/aeternae/configurations/animechanica/data/assets"
-sudo mkdir -p "$DATA_ASSETS_DIR"
-sudo cp -r seanime-web/out/* "$DATA_ASSETS_DIR/"
-
 # Build the Go server (Linux/macOS default, can be adjusted for Windows)
 go build -o seanime -trimpath -ldflags="-s -w"
 
