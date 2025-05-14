@@ -14,9 +14,29 @@ import (
 
 // Helper to get AniList token from session
 func getAniListTokenFromSession(c echo.Context) string {
+	// First try to get from context (set by SessionMiddleware)
+	token := GetAnilistToken(c)
+	if token != "" {
+		return token
+	}
+	
+	// Fallback to session
 	sess, _ := session.Get("session", c)
 	token, ok := sess.Values["anilist_token"].(string)
 	if !ok || token == "" {
+		// Get session ID
+		sessionID := GetSessionID(c)
+		if sessionID != "" {
+			// Try to get token from database using session ID
+			handler := c.Get("handler").(*Handler)
+			if handler != nil {
+				token = handler.App.Database.GetAnilistTokenBySessionID(sessionID)
+				if token != "" {
+					return token
+				}
+			}
+		}
+		
 		if c != nil && c.Logger() != nil {
 			c.Logger().Warn("AniList token missing in session")
 		}
