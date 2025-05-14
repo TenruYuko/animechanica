@@ -11,6 +11,7 @@ cd ..
 if [ -d "web" ]; then
   rm -rf web
 fi
+mkdir web
 cp -r seanime-web/out/* web/
 
 # Build the Go server (Linux/macOS default, can be adjusted for Windows)
