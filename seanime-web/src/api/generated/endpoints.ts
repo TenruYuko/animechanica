@@ -272,6 +272,15 @@ export const API_ENDPOINTS = {
             methods: ["POST"],
             endpoint: "/api/v1/auth/logout",
         },
+        /**
+         *  @description
+         *  Lists all active sessions for the administrator.
+         */
+        ListSessions: {
+            key: "AUTH-list-sessions",
+            methods: ["GET"],
+            endpoint: "/api/v1/auth/sessions",
+        },
     },
     AUTO_DOWNLOADER: {
         /**

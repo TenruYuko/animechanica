@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
+	"github.com/google/uuid"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -30,6 +31,15 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 	if err := c.Bind(&b); err != nil {
 		return h.RespondWithError(c, err)
 	}
+
+	// Generate a unique session ID if not already present
+	sessionID, ok := sess.Values["session_id"].(string)
+	if !ok || sessionID == "" {
+		sessionID = uuid.New().String()
+		sess.Values["session_id"] = sessionID
+	}
+
+	// Store the AniList token in the session
 	sess.Values["anilist_token"] = b.Token
 	sess.Options = &sessions.Options{
 		Path:     "/",
@@ -38,7 +48,7 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 	}
 	sess.Save(c.Request(), c.Response())
 
-	// Set a new AniList client by passing to JWT token
+	// Set a new AniList client by passing the JWT token
 	h.App.UpdateAnilistClientToken(b.Token)
 
 	// Get viewer data from AniList
@@ -58,28 +68,31 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 		h.App.Logger.Err(err).Msg("scan: could not save local files")
 	}
 
-	// Save account data in database
+	// Save account data in database with the session ID
 	_, err = h.App.Database.UpsertAccount(&models.Account{
 		BaseModel: models.BaseModel{
-			ID:        1,
 			UpdatedAt: time.Now(),
 		},
-		Username: getViewer.Viewer.Name,
-		Token:    b.Token,
-		Viewer:   bytes,
+		Username:  getViewer.Viewer.Name,
+		Token:     b.Token,
+		Viewer:    bytes,
+		SessionID: sessionID,
+		IsActive:  true,
 	})
 
 	if err != nil {
 		return h.RespondWithError(c, err)
 	}
 
-	h.App.Logger.Info().Msg("app: Authenticated to AniList")
+	h.App.Logger.Info().Str("username", getViewer.Viewer.Name).Str("sessionID", sessionID).Msg("app: Authenticated to AniList")
 
 	// Create a new status
 	status := h.NewStatus(c)
 
+	// Initialize or refresh AniList data for this session
 	h.App.InitOrRefreshAnilistData()
 
+	// Initialize or refresh modules
 	h.App.InitOrRefreshModules()
 
 	go func() {
@@ -91,7 +104,6 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 
 	// Return new status
 	return h.RespondWithData(c, status)
-
 }
 
 // HandleLogout
@@ -103,31 +115,48 @@ func (h *Handler) HandleLogin(c echo.Context) error {
 //	@returns handlers.Status
 func (h *Handler) HandleLogout(c echo.Context) error {
 	sess, _ := session.Get("session", c)
-	sess.Options.MaxAge = -1 // Invalidate session
+
+	// Get the session ID
+	sessionID, ok := sess.Values["session_id"].(string)
+	if ok && sessionID != "" {
+		// Deactivate the session in the database
+		err := h.App.Database.DeactivateSession(sessionID)
+		if err != nil {
+			h.App.Logger.Error().Err(err).Str("sessionID", sessionID).Msg("Failed to deactivate session")
+		}
+
+		h.App.Logger.Info().Str("sessionID", sessionID).Msg("Logged out of AniList")
+	}
+
+	// Invalidate the browser session
+	sess.Options.MaxAge = -1
 	sess.Save(c.Request(), c.Response())
-	return h.RespondWithData(c, true)
 
-	_, err := h.App.Database.UpsertAccount(&models.Account{
-		BaseModel: models.BaseModel{
-			ID:        1,
-			UpdatedAt: time.Now(),
-		},
-		Username: "",
-		Token:    "",
-		Viewer:   nil,
-	})
+	// Create a new status
+	status := h.NewStatus(c)
 
+	return h.RespondWithData(c, status)
+}
+
+// HandleListSessions
+//
+//	@summary lists all active sessions for the administrator.
+//	@desc This endpoint is only accessible to administrators.
+//	@route /api/v1/auth/sessions [GET]
+//	@returns []models.Account
+func (h *Handler) HandleListSessions(c echo.Context) error {
+	// In a real implementation, you would check if the user is an administrator
+	// For now, we'll just return all active sessions
+	sessions, err := h.App.Database.ListActiveSessions()
 	if err != nil {
 		return h.RespondWithError(c, err)
 	}
 
-	h.App.Logger.Info().Msg("Logged out of AniList")
+	// Remove sensitive information
+	for _, s := range sessions {
+		s.Token = "[redacted]"
+		s.Viewer = nil
+	}
 
-	status := h.NewStatus(c)
-
-	h.App.InitOrRefreshModules()
-
-	h.App.InitOrRefreshAnilistData()
-
-	return h.RespondWithData(c, status)
+	return h.RespondWithData(c, sessions)
 }

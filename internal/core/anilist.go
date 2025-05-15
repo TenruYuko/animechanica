@@ -40,6 +40,19 @@ func (a *App) UpdateAnilistClientToken(token string) {
 	a.AnilistPlatform.SetAnilistClient(a.AnilistClient) // Update Anilist Client Wrapper in Platform
 }
 
+// GetAnilistClientForSession returns an AniList client for a specific session
+func (a *App) GetAnilistClientForSession(sessionID string) anilist.AnilistClient {
+	// Get the token for this session
+	token := a.Database.GetAnilistTokenBySessionID(sessionID)
+	if token == "" {
+		// If no token found, return the default client
+		return a.AnilistClient
+	}
+	
+	// Create a new client with this token
+	return anilist.NewAnilistClient(token)
+}
+
 // GetAnimeCollection returns the user's Anilist collection if it in the cache, otherwise it queries Anilist for the user's collection.
 // When bypassCache is true, it will always query Anilist for the user's collection
 func (a *App) GetAnimeCollection(bypassCache bool) (*anilist.AnimeCollection, error) {
