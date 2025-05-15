@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bash ./compile.sh
+sudo bash ./compile.sh
 
 # Set the data directory path
 DATA_DIR="/aeternae/configurations/animechanica/data/"

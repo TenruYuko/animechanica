@@ -8,6 +8,7 @@ testdata/
 .cursor
 .DS_Store
 */.DS_Store
+main.go
 
 Dockerfile
 Dockerfile.dev
@@ -82,3 +83,5 @@ codegen/generated/hooks.mdx
 
 internal/extension_repo/goja_onlinestream_test/test1.ts
 internal/extension_repo/goja_plugin_test
+main.go
+main.go
