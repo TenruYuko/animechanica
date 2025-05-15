@@ -17,6 +17,7 @@ dev.dockerfile
 _docker-compose.yml
 
 logs
+web/
 web-desktop/
 out/
 assets/
