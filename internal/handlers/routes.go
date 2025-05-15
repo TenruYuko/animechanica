@@ -24,6 +24,20 @@ type Handler struct {
 func SetupRoutes(e *echo.Echo, app *core.App) {
 	store := sessions.NewCookieStore([]byte("very-secret-key-change-me")) // TODO: Replace with secure key from config/env
 	e.Use(session.Middleware(store))
+	
+	// Create the handler
+	h := &Handler{App: app}
+	
+	// Store the handler in the context for middleware to access
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Set("handler", h)
+			return next(c)
+		}
+	})
+	
+	// Add session middleware to manage user sessions
+	e.Use(SessionMiddleware(h))
 
 	// CORS middleware
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -108,8 +122,6 @@ func SetupRoutes(e *echo.Echo, app *core.App) {
 
 	e.Use(headMethodMiddleware)
 
-	h := &Handler{App: app}
-
 	e.GET("/events", h.webSocketEventHandler)
 
 	v1 := e.Group("/api").Group("/v1") // Commented out for now, will be used later
@@ -128,6 +140,7 @@ func SetupRoutes(e *echo.Echo, app *core.App) {
 	// Auth
 	v1.POST("/auth/login", h.HandleLogin)
 	v1.POST("/auth/logout", h.HandleLogout)
+	v1.GET("/auth/sessions", h.HandleListSessions)
 
 	// Settings
 	v1.GET("/settings", h.HandleGetSettings)

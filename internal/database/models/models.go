@@ -20,9 +20,12 @@ type Token struct {
 
 type Account struct {
 	BaseModel
-	Username string `gorm:"column:username" json:"username"`
-	Token    string `gorm:"column:token" json:"token"`
-	Viewer   []byte `gorm:"column:viewer" json:"viewer"`
+	Username    string `gorm:"column:username;index" json:"username"`
+	Token       string `gorm:"column:token" json:"token"`
+	Viewer      []byte `gorm:"column:viewer" json:"viewer"`
+	SessionID   string `gorm:"column:session_id;uniqueIndex" json:"sessionId"` // Unique session ID for each browser session
+	LastActive  int64  `gorm:"column:last_active" json:"lastActive"`           // Unix timestamp of last activity
+	IsActive    bool   `gorm:"column:is_active;default:true" json:"isActive"`  // Whether this session is currently active
 }
 
 // +---------------------+
