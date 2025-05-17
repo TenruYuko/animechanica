@@ -1,10 +1,18 @@
+import { Form } from "@/components/ui/form"
+import { logger } from "@/lib/helpers/debug"
+import { ANILIST_OAUTH_URL, COOKIE_OPTIONS } from "@/lib/server/config"
+import axios from "axios"
+import { deleteCookie, getCookie, setCookie } from "cookies-next"
+import Link from "next/link"
+import { useEffect, useState } from "react"
 import { useLogin } from "@/api/hooks/auth.hooks"
-import { websocketConnectedAtom } from "@/app/websocket-provider"
-import { LoadingOverlay } from "@/components/ui/loading-spinner"
+import { isPlatformMirrorMode } from "@/lib/server/config.client"
 import { useAtomValue } from "jotai/react"
 import { useRouter } from "next/navigation"
 import React from "react"
 import { toast } from "sonner"
+import { LoadingOverlay } from "@/components/ui/loading-spinner"
+import { websocketConnectedAtom } from "@/app/websocket-provider"
 
 type CallbackPageProps = {}
 
@@ -82,6 +90,7 @@ export function CallbackPage(props: CallbackPageProps) {
         if (_token && !called.current) {
             debugLogin('Attempting login with token');
             setError(null);
+            called.current = true; // Mark as called to prevent duplicate logins
             
             // Store token in localStorage for persistence
             localStorage.setItem('anilist_token', _token);
@@ -91,16 +100,55 @@ export function CallbackPage(props: CallbackPageProps) {
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
             
-            // Try to set the cookie directly and redirect
-            document.cookie = `Seanime-Anilist-Session=${_token}; path=/; max-age=31536000`;
-            debugLogin('Set session cookie directly, redirecting to home');
+            // Check if we're in mirror mode (connecting to a different host)
+            const isMirrorMode = process.env.NEXT_PUBLIC_PLATFORM === 'mirror';
+            debugLogin('Mirror mode:', isMirrorMode ? 'true' : 'false');
             
-            // Redirect to home page
-            setTimeout(() => {
-                window.location.href = '/';
-            }, 1000);
-            
-            called.current = true;
+            if (isMirrorMode) {
+                // In mirror mode, we need to call the API to properly authenticate
+                debugLogin('Using API login in mirror mode with token length:', _token.length);
+                
+                // Show detailed token information (truncated for security)
+                console.log('Token first 10 chars:', _token.substring(0, 10) + '...');
+                
+                // Try to clean the token in case there are any formatting issues
+                const cleanedToken = _token.trim().replace(/[\n\r\t]/g, '');
+                
+                // Make sure we have the correct Content-Type for the API call
+                document.cookie = `Seanime-Anilist-Session=${cleanedToken}; path=/; max-age=31536000`;
+                
+                // Make the login API call
+                login({
+                    token: cleanedToken,
+                }, {
+                    onSuccess: (data) => {
+                        debugLogin('Login API call successful', data);
+                        // Redirect to home page
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1000);
+                    },
+                    onError: (error) => {
+                        debugLogin('Login API call failed', error);
+                        // Provide more detailed error information
+                        const errorMsg = error?.message || 'Unknown error';
+                        const statusCode = error?.response?.status;
+                        console.error(`Login error (${statusCode}):`, errorMsg, error);
+                        
+                        setError(`Failed to log in with AniList token (${statusCode}): ${errorMsg}`);
+                        setRetrying(false);
+                    }
+                });
+            } else {
+                // In standard mode, set the cookie directly
+                debugLogin('Using direct cookie in standard mode');
+                document.cookie = `Seanime-Anilist-Session=${_token}; path=/; max-age=31536000`;
+                
+                // Redirect to home page
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            }
         } else if (!_token && !called.current) {
             debugLogin('No token found');
             setError("Invalid or missing AniList token. Please try logging in again.");

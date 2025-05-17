@@ -5,6 +5,16 @@ import Image from "next/image"
 import React from "react"
 
 export function LoadingOverlayWithLogo({ refetch, title }: { refetch?: () => void, title?: string }) {
+    // Use a consistent default title for server rendering to prevent hydration mismatch
+    const defaultTitle = "S e a n i m e";
+    
+    // Use client-side only rendering for components that might cause hydration issues
+    const [isMounted, setIsMounted] = React.useState(false);
+    
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
+    
     return <LoadingOverlay showSpinner={false}>
         <Image
             src="/logo_2.png"
@@ -14,9 +24,14 @@ export function LoadingOverlayWithLogo({ refetch, title }: { refetch?: () => voi
             height={180}
             className="animate-pulse"
         />
-        <TextGenerateEffect className="text-lg mt-2 text-[--muted] animate-pulse" words={title ?? "S e a n i m e"} />
+        
+        {/* Always render with default title during server rendering to prevent hydration mismatch */}
+        <TextGenerateEffect 
+            className="text-lg mt-2 text-[--muted] animate-pulse" 
+            words={isMounted ? (title ?? defaultTitle) : defaultTitle} 
+        />
 
-        {(process.env.NEXT_PUBLIC_PLATFORM === "desktop" && !!refetch) && (
+        {isMounted && process.env.NEXT_PUBLIC_PLATFORM === "desktop" && !!refetch && (
             <Button
                 onClick={() => window.location.reload()}
                 className="mt-4"

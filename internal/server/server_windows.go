@@ -22,6 +22,27 @@ func StartServer(webFS embed.FS, embeddedLogo []byte) {
 
 	app, flags, selfupdater := startApp(embeddedLogo)
 
+	// Get the backend host and port from the app config
+	backendHost := app.Config.Server.Host
+	backendPort := app.Config.Server.Port
+
+	// If the backend host is 0.0.0.0 or empty, we'll use 127.0.0.1 for the frontend to connect to
+	connectHost := backendHost
+	if backendHost == "0.0.0.0" || backendHost == "" {
+		connectHost = "127.0.0.1"
+	}
+
+	// Start the frontend server in a goroutine
+	go func() {
+		// Wait a moment to let the backend initialize first
+		err := StartFrontendServer(connectHost, backendPort)
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to start frontend server")
+		} else {
+			log.Info().Msg(fmt.Sprintf("Frontend available at http://0.0.0.0:43210 (connecting to backend at http://%s:%d)", connectHost, backendPort))
+		}
+	}()
+
 	// Blocks until systray.Quit() is called
 	systray.Run(onReady(&webFS, app, flags, selfupdater), onExit)
 }

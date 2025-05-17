@@ -13,28 +13,64 @@ export const TextGenerateEffect = ({
     style?: any
 } & React.HTMLAttributes<HTMLDivElement>) => {
     const [scope, animate] = useAnimate()
-    let wordsArray = words.split(" ")
+    // Store the original words to prevent hydration errors
+    const [displayWords, setDisplayWords] = React.useState<string>("");
+    // Create a stable key for the entire component based on the words
+    const contentKey = React.useMemo(() => (typeof words === 'string' ? words.replace(/\s+/g, "") : ""), [words])
+    const wordsArray = displayWords.split(" ")
 
+    // Handle hydration - only set displayWords after component mounts to ensure server/client match
+    React.useEffect(() => {
+        setDisplayWords(words || "S e a n i m e");
+    }, [words]);
+
+    // Reset and run animation when displayWords change (client-side only)
     useEffect(() => {
-        animate(
-            "span",
-            {
-                opacity: 1,
-            },
-            {
-                duration: 2,
-                delay: stagger(0.2),
-            },
-        )
-    }, [words])
+        // Skip animation if not mounted or no words
+        if (!displayWords) return;
+        
+        // Use a safer approach to animation with proper error handling
+        let isMounted = true;
+        
+        const resetAnimation = async () => {
+            try {
+                // Simple immediate fade-in without the two-step approach to avoid issues
+                if (isMounted) {
+                    animate(
+                        "span",
+                        { opacity: 1 },
+                        {
+                            duration: 1.5,
+                            delay: stagger(0.15),
+                        }
+                    );
+                }
+            } catch (error) {
+                console.error("Animation error:", error);
+            }
+        };
+        
+        // Small delay to ensure DOM is ready
+        const timer = setTimeout(() => {
+            if (isMounted) {
+                resetAnimation();
+            }
+        }, 50);
+        
+        // Cleanup function
+        return () => {
+            isMounted = false;
+            clearTimeout(timer);
+        };
+    }, [displayWords, animate]);
 
     const renderWords = () => {
         return (
-            <motion.div ref={scope}>
+            <motion.div ref={scope} key={contentKey}>
                 {wordsArray.map((word, idx) => {
                     return (
                         <motion.span
-                            key={word + idx}
+                            key={`${contentKey}-${idx}`}
                             className="opacity-0"
                         >
                             {word}{" "}

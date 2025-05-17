@@ -13,8 +13,7 @@ Dockerfile
 Dockerfile.dev
 dev.dockerfile
 .dockerignore
-
-_docker-compose.yml
+docker-compose.yml
 
 logs
 web-desktop/

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { AppLayoutStack } from "@/components/ui/app-layout"
@@ -8,10 +8,15 @@ import { ANILIST_PIN_URL } from "@/lib/server/config"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useServerStatus } from "@/app/(main)/_hooks/use-server-status"
+import { useLogin } from '@/api/hooks/auth.hooks';
 
 export default function AuthPage() {
   const router = useRouter()
   const serverStatus = useServerStatus()
+  const [showDirectInput, setShowDirectInput] = useState(false);
+  const [token, setToken] = useState('');
+  const { mutate: login } = useLogin();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Debug function to show more information about what's happening
   const debugAuth = (message: string, data?: any) => {
@@ -89,7 +94,47 @@ export default function AuthPage() {
                 label="Enter the token"
                 fieldClass="px-4"
               />
-              <Field.Submit showLoadingOverlayOnSuccess>Continue</Field.Submit>
+              <div className="flex gap-2 justify-center">
+                <Field.Submit showLoadingOverlayOnSuccess>Continue with Redirect</Field.Submit>
+                
+                <Button
+                  type="button"
+                  intent="primary"
+                  disabled={isLoading}
+                  onClick={() => {
+                    // Get token from the textarea
+                    const tokenField = document.querySelector('textarea[name="token"]') as HTMLTextAreaElement;
+                    if (!tokenField || !tokenField.value.trim()) {
+                      alert('Please enter a valid token');
+                      return;
+                    }
+                    
+                    const token = tokenField.value.trim();
+                    debugAuth('Direct login with token length:', token.length);
+                    setIsLoading(true);
+                    
+                    // Direct login without redirect
+                    // Store token in cookie
+                    document.cookie = `Seanime-Anilist-Session=${token}; path=/; max-age=31536000`;
+                    
+                    // Call login API
+                    login({ token }, {
+                      onSuccess: (data) => {
+                        debugAuth('Direct login successful', data);
+                        // Force redirect to home
+                        window.location.href = '/';
+                      },
+                      onError: (error) => {
+                        debugAuth('Direct login failed', error);
+                        setIsLoading(false);
+                        alert('Login failed: ' + (error?.message || 'Unknown error'));
+                      }
+                    });
+                  }}
+                >
+                  {isLoading ? 'Logging in...' : 'Direct Login'}
+                </Button>
+              </div>
             </Form>
           </div>
         </AppLayoutStack>
