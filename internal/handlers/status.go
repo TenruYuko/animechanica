@@ -54,10 +54,35 @@ func (h *Handler) NewStatus(c echo.Context) *Status {
 	var theme *models.Theme
 	//var mal *models.Mal
 
-	if dbAcc, _ = h.App.Database.GetAccount(); dbAcc != nil {
-		user, _ = anime.NewUser(dbAcc)
-		if user != nil {
-			user.Token = "HIDDEN"
+	// Check for session cookie first
+	sessionCookie, err := c.Cookie("Seanime-Session-Id")
+	if err == nil && sessionCookie.Value != "" {
+		// Try to get the session from the database
+		session, err := h.App.Database.GetUserSessionByID(sessionCookie.Value)
+		if err == nil {
+			// Valid session found, create a user from the session data
+			tempAcc := &models.Account{
+				Username: session.Username,
+				Token:    session.Token,
+				Viewer:   session.Viewer,
+			}
+			user, _ = anime.NewUser(tempAcc)
+			if user != nil {
+				user.Token = "HIDDEN"
+			}
+			
+			// Set the AniList client token for this request
+			h.App.UpdateAnilistClientToken(session.Token)
+		}
+	}
+
+	// Fallback to global account if no session or session is invalid
+	if user == nil {
+		if dbAcc, _ = h.App.Database.GetAccount(); dbAcc != nil {
+			user, _ = anime.NewUser(dbAcc)
+			if user != nil {
+				user.Token = "HIDDEN"
+			}
 		}
 	}
 

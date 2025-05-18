@@ -107,7 +107,7 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 
 	e.GET("/events", h.webSocketEventHandler)
 
-	v1 := e.Group("/api").Group("/v1") // Commented out for now, will be used later
+	v1 := e.Group("/api").Group("/v1") // Base API group
 
 	imageProxy := &util.ImageProxy{}
 	v1.GET("/image-proxy", imageProxy.ProxyImage)
@@ -120,42 +120,47 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	v1.GET("/logs/filenames", h.HandleGetLogFilenames)
 	v1.DELETE("/logs", h.HandleDeleteLogs)
 	v1.GET("/logs/latest", h.HandleGetLatestLogContent)
-	// Auth
+	// Auth endpoints (no session required)
 	v1.POST("/auth/login", h.HandleLogin)
 	v1.POST("/auth/logout", h.HandleLogout)
+	v1.GET("/auth/check-session", h.HandleCheckSession)
+	v1.GET("/auth/test-session", h.HandleTestSession)
 
-	// Settings
-	v1.GET("/settings", h.HandleGetSettings)
-	v1.PATCH("/settings", h.HandleSaveSettings)
-	v1.POST("/start", h.HandleGettingStarted)
-	v1.PATCH("/settings/auto-downloader", h.HandleSaveAutoDownloaderSettings)
+	// Create a group for protected routes that require authentication
+	protected := v1.Group("", h.SessionMiddleware)
 
-	// Auto Downloader
-	v1.POST("/auto-downloader/run", h.HandleRunAutoDownloader)
-	v1.GET("/auto-downloader/rule/:id", h.HandleGetAutoDownloaderRule)
-	v1.GET("/auto-downloader/rule/anime/:id", h.HandleGetAutoDownloaderRulesByAnime)
-	v1.GET("/auto-downloader/rules", h.HandleGetAutoDownloaderRules)
-	v1.POST("/auto-downloader/rule", h.HandleCreateAutoDownloaderRule)
-	v1.PATCH("/auto-downloader/rule", h.HandleUpdateAutoDownloaderRule)
-	v1.DELETE("/auto-downloader/rule/:id", h.HandleDeleteAutoDownloaderRule)
+	// Settings - protected routes
+	protected.GET("/settings", h.HandleGetSettings)
+	protected.PATCH("/settings", h.HandleSaveSettings)
+	protected.POST("/start", h.HandleGettingStarted)
+	protected.PATCH("/settings/auto-downloader", h.HandleSaveAutoDownloaderSettings)
 
-	v1.GET("/auto-downloader/items", h.HandleGetAutoDownloaderItems)
-	v1.DELETE("/auto-downloader/item", h.HandleDeleteAutoDownloaderItem)
+	// Auto Downloader - protected routes
+	protected.POST("/auto-downloader/run", h.HandleRunAutoDownloader)
+	protected.GET("/auto-downloader/rule/:id", h.HandleGetAutoDownloaderRule)
+	protected.GET("/auto-downloader/rule/anime/:id", h.HandleGetAutoDownloaderRulesByAnime)
+	protected.GET("/auto-downloader/rules", h.HandleGetAutoDownloaderRules)
+	protected.POST("/auto-downloader/rule", h.HandleCreateAutoDownloaderRule)
+	protected.PATCH("/auto-downloader/rule", h.HandleUpdateAutoDownloaderRule)
+	protected.DELETE("/auto-downloader/rule/:id", h.HandleDeleteAutoDownloaderRule)
 
-	// Other
-	v1.POST("/test-dump", h.HandleTestDump)
+	protected.GET("/auto-downloader/items", h.HandleGetAutoDownloaderItems)
+	protected.DELETE("/auto-downloader/item", h.HandleDeleteAutoDownloaderItem)
 
-	v1.POST("/directory-selector", h.HandleDirectorySelector)
+	// Other - protected routes
+	protected.POST("/test-dump", h.HandleTestDump)
 
-	v1.POST("/open-in-explorer", h.HandleOpenInExplorer)
+	protected.POST("/directory-selector", h.HandleDirectorySelector)
 
-	v1.POST("/media-player/start", h.HandleStartDefaultMediaPlayer)
+	protected.POST("/open-in-explorer", h.HandleOpenInExplorer)
+
+	protected.POST("/media-player/start", h.HandleStartDefaultMediaPlayer)
 
 	//
-	// AniList
+	// AniList - protected routes
 	//
 
-	v1Anilist := v1.Group("/anilist")
+	v1Anilist := protected.Group("/anilist")
 
 	v1Anilist.GET("/collection", h.HandleGetAnimeCollection)
 	v1Anilist.POST("/collection", h.HandleGetAnimeCollection)
@@ -180,18 +185,18 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	v1Anilist.GET("/stats", h.HandleGetAniListStats)
 
 	//
-	// MAL
+	// MAL - protected routes
 	//
 
-	v1.POST("/mal/auth", h.HandleMALAuth)
+	protected.POST("/mal/auth", h.HandleMALAuth)
 
-	v1.POST("/mal/logout", h.HandleMALLogout)
+	protected.POST("/mal/logout", h.HandleMALLogout)
 
 	//
-	// Library
+	// Library - protected routes
 	//
 
-	v1Library := v1.Group("/library")
+	v1Library := protected.Group("/library")
 
 	v1Library.POST("/scan", h.HandleScanLocalFiles)
 
@@ -354,7 +359,7 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	// Discord
 	//
 
-	v1Discord := v1.Group("/discord")
+	v1Discord := protected.Group("/discord")
 	v1Discord.POST("/presence/manga", h.HandleSetDiscordMangaActivity)
 	v1Discord.POST("/presence/legacy-anime", h.HandleSetDiscordLegacyAnimeActivity)
 	v1Discord.POST("/presence/anime", h.HandleSetDiscordAnimeActivityWithProgress)
@@ -364,37 +369,37 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	//
 	// Media Stream
 	//
-	v1.GET("/mediastream/settings", h.HandleGetMediastreamSettings)
-	v1.PATCH("/mediastream/settings", h.HandleSaveMediastreamSettings)
-	v1.POST("/mediastream/request", h.HandleRequestMediastreamMediaContainer)
-	v1.POST("/mediastream/preload", h.HandlePreloadMediastreamMediaContainer)
+	protected.GET("/mediastream/settings", h.HandleGetMediastreamSettings)
+	protected.PATCH("/mediastream/settings", h.HandleSaveMediastreamSettings)
+	protected.POST("/mediastream/request", h.HandleRequestMediastreamMediaContainer)
+	protected.POST("/mediastream/preload", h.HandlePreloadMediastreamMediaContainer)
 	// Transcode
-	v1.POST("/mediastream/shutdown-transcode", h.HandleMediastreamShutdownTranscodeStream)
-	v1.GET("/mediastream/transcode/*", h.HandleMediastreamTranscode)
-	v1.GET("/mediastream/subs/*", h.HandleMediastreamGetSubtitles)
-	v1.GET("/mediastream/att/*", h.HandleMediastreamGetAttachments)
-	v1.GET("/mediastream/direct", h.HandleMediastreamDirectPlay)
-	v1.HEAD("/mediastream/direct", h.HandleMediastreamDirectPlay)
-	v1.GET("/mediastream/file/*", h.HandleMediastreamFile)
+	protected.POST("/mediastream/shutdown-transcode", h.HandleMediastreamShutdownTranscodeStream)
+	protected.GET("/mediastream/transcode/*", h.HandleMediastreamTranscode)
+	protected.GET("/mediastream/subs/*", h.HandleMediastreamGetSubtitles)
+	protected.GET("/mediastream/att/*", h.HandleMediastreamGetAttachments)
+	protected.GET("/mediastream/direct", h.HandleMediastreamDirectPlay)
+	protected.HEAD("/mediastream/direct", h.HandleMediastreamDirectPlay)
+	protected.GET("/mediastream/file/*", h.HandleMediastreamFile)
 
 	//
 	// Torrent stream
 	//
-	v1.GET("/torrentstream/episodes/:id", h.HandleGetTorrentstreamEpisodeCollection)
-	v1.GET("/torrentstream/settings", h.HandleGetTorrentstreamSettings)
-	v1.PATCH("/torrentstream/settings", h.HandleSaveTorrentstreamSettings)
-	v1.POST("/torrentstream/start", h.HandleTorrentstreamStartStream)
-	v1.POST("/torrentstream/stop", h.HandleTorrentstreamStopStream)
-	v1.POST("/torrentstream/drop", h.HandleTorrentstreamDropTorrent)
-	v1.POST("/torrentstream/torrent-file-previews", h.HandleGetTorrentstreamTorrentFilePreviews)
-	v1.POST("/torrentstream/batch-history", h.HandleGetTorrentstreamBatchHistory)
-	v1.GET("/torrentstream/stream/*", echo.WrapHandler(h.HandleTorrentstreamServeStream()))
+	protected.GET("/torrentstream/episodes/:id", h.HandleGetTorrentstreamEpisodeCollection)
+	protected.GET("/torrentstream/settings", h.HandleGetTorrentstreamSettings)
+	protected.PATCH("/torrentstream/settings", h.HandleSaveTorrentstreamSettings)
+	protected.POST("/torrentstream/start", h.HandleTorrentstreamStartStream)
+	protected.POST("/torrentstream/stop", h.HandleTorrentstreamStopStream)
+	protected.POST("/torrentstream/drop", h.HandleTorrentstreamDropTorrent)
+	protected.POST("/torrentstream/torrent-file-previews", h.HandleGetTorrentstreamTorrentFilePreviews)
+	protected.POST("/torrentstream/batch-history", h.HandleGetTorrentstreamBatchHistory)
+	protected.GET("/torrentstream/stream/*", echo.WrapHandler(h.HandleTorrentstreamServeStream()))
 
 	//
 	// Extensions
 	//
 
-	v1Extensions := v1.Group("/extensions")
+	v1Extensions := protected.Group("/extensions")
 	v1Extensions.POST("/playground/run", h.HandleRunExtensionPlaygroundCode)
 	v1Extensions.POST("/external/fetch", h.HandleFetchExternalExtensionData)
 	v1Extensions.POST("/external/install", h.HandleInstallExternalExtension)
@@ -420,7 +425,7 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	//
 	// Continuity
 	//
-	v1Continuity := v1.Group("/continuity")
+	v1Continuity := protected.Group("/continuity")
 	v1Continuity.PATCH("/item", h.HandleUpdateContinuityWatchHistoryItem)
 	v1Continuity.GET("/item/:id", h.HandleGetContinuityWatchHistoryItem)
 	v1Continuity.GET("/history", h.HandleGetContinuityWatchHistory)
@@ -428,7 +433,7 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	//
 	// Sync
 	//
-	v1Sync := v1.Group("/sync")
+	v1Sync := protected.Group("/sync")
 	v1Sync.GET("/track", h.HandleSyncGetTrackedMediaItems)
 	v1Sync.POST("/track", h.HandleSyncAddMedia)
 	v1Sync.DELETE("/track", h.HandleSyncRemoveMedia)
@@ -444,17 +449,18 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	// Debrid
 	//
 
-	v1.GET("/debrid/settings", h.HandleGetDebridSettings)
-	v1.PATCH("/debrid/settings", h.HandleSaveDebridSettings)
-	v1.POST("/debrid/torrents", h.HandleDebridAddTorrents)
-	v1.POST("/debrid/torrents/download", h.HandleDebridDownloadTorrent)
-	v1.POST("/debrid/torrents/cancel", h.HandleDebridCancelDownload)
-	v1.DELETE("/debrid/torrent", h.HandleDebridDeleteTorrent)
-	v1.GET("/debrid/torrents", h.HandleDebridGetTorrents)
-	v1.POST("/debrid/torrents/info", h.HandleDebridGetTorrentInfo)
-	v1.POST("/debrid/torrents/file-previews", h.HandleDebridGetTorrentFilePreviews)
-	v1.POST("/debrid/stream/start", h.HandleDebridStartStream)
-	v1.POST("/debrid/stream/cancel", h.HandleDebridCancelStream)
+	v1Debrid := protected.Group("/debrid")
+	v1Debrid.GET("/settings", h.HandleGetDebridSettings)
+	v1Debrid.PATCH("/settings", h.HandleSaveDebridSettings)
+	v1Debrid.POST("/torrents", h.HandleDebridAddTorrents)
+	v1Debrid.POST("/torrents/download", h.HandleDebridDownloadTorrent)
+	v1Debrid.POST("/torrents/cancel", h.HandleDebridCancelDownload)
+	v1Debrid.DELETE("/torrent", h.HandleDebridDeleteTorrent)
+	v1Debrid.GET("/torrents", h.HandleDebridGetTorrents)
+	v1Debrid.POST("/torrents/info", h.HandleDebridGetTorrentInfo)
+	v1Debrid.POST("/torrents/file-previews", h.HandleDebridGetTorrentFilePreviews)
+	v1Debrid.POST("/stream/start", h.HandleDebridStartStream)
+	v1Debrid.POST("/stream/cancel", h.HandleDebridCancelStream)
 
 	//
 	// Report

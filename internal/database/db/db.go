@@ -91,6 +91,7 @@ func migrateTables(db *gorm.DB) error {
 		&models.DebridSettings{},
 		&models.DebridTorrentItem{},
 		&models.PluginData{},
+		&models.UserSession{}, // Added for multi-user session support
 		//&models.MangaChapterContainer{},
 	)
 	if err != nil {
