@@ -13,9 +13,11 @@ Dockerfile
 Dockerfile.dev
 dev.dockerfile
 .dockerignore
-docker-compose.yml
+
+_docker-compose.yml
 
 logs
+web/
 web-desktop/
 out/
 assets/
