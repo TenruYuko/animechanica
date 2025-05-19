@@ -39,9 +39,28 @@ func GetInto(client *http.Client, target interface{}, url string, body interface
 	if err != nil {
 		return err
 	}
+	
+	// Handle empty responses
+	if len(buf) == 0 || string(buf) == "" {
+		// For slice targets, return an empty slice instead of error
+		if _, ok := target.(*[]interface{}); ok || strings.Contains(fmt.Sprintf("%T", target), "[]" ) {
+			// Target is a slice type, return empty result instead of error
+			return nil
+		}
+	}
+	
+	// Try to decode the response
 	if err := json.NewDecoder(bytes.NewReader(buf)).Decode(target); err != nil {
+		// First fallback: try as quoted string
 		if err2 := json.NewDecoder(strings.NewReader(`"` + string(buf) + `"`)).Decode(target); err2 != nil {
-			return err
+			// Second fallback: if target is a slice type, try to initialize it as empty
+			if _, ok := target.(*[]interface{}); ok || strings.Contains(fmt.Sprintf("%T", target), "[]" ) {
+				// Target is a slice type, return empty result instead of error
+				return nil
+			}
+			
+			// Return original error with response content for debugging
+			return fmt.Errorf("%v: %s", err, string(buf))
 		}
 	}
 	return nil

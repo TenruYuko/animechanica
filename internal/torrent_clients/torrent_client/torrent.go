@@ -1,7 +1,7 @@
 package torrent_client
 
 import (
-	"seanime/internal/torrent_clients/qbittorrent/model"
+	qbittorrent_model "seanime/internal/torrent_clients/qbittorrent/model"
 	"seanime/internal/util"
 
 	"github.com/hekmon/transmissionrpc/v3"
@@ -140,25 +140,41 @@ func (r *Repository) FromQbitTorrent(t *qbittorrent_model.Torrent) *Torrent {
 
 // fromQbitTorrentStatus returns a normalized status for the torrent.
 func fromQbitTorrentStatus(st qbittorrent_model.TorrentState) TorrentStatus {
-	if st == qbittorrent_model.StateQueuedUP ||
-		st == qbittorrent_model.StateStalledUP ||
-		st == qbittorrent_model.StateForcedUP ||
-		st == qbittorrent_model.StateCheckingUP ||
-		st == qbittorrent_model.StateUploading {
-		return TorrentStatusSeeding
-	} else if st == qbittorrent_model.StatePausedDL || st == qbittorrent_model.StateStoppedDL {
-		return TorrentStatusPaused
-	} else if st == qbittorrent_model.StateDownloading ||
+	// Handle downloading states
+	if st == qbittorrent_model.StateDownloading ||
 		st == qbittorrent_model.StateCheckingDL ||
 		st == qbittorrent_model.StateStalledDL ||
 		st == qbittorrent_model.StateQueuedDL ||
 		st == qbittorrent_model.StateMetaDL ||
 		st == qbittorrent_model.StateAllocating ||
-		st == qbittorrent_model.StateForceDL {
+		st == qbittorrent_model.StateForceDL ||
+		st == qbittorrent_model.StateCheckingResumeData ||
+		st == qbittorrent_model.StateMoving {
 		return TorrentStatusDownloading
+
+		// Handle seeding states
+	} else if st == qbittorrent_model.StateQueuedUP ||
+		st == qbittorrent_model.StateStalledUP ||
+		st == qbittorrent_model.StateForcedUP ||
+		st == qbittorrent_model.StateCheckingUP ||
+		st == qbittorrent_model.StateUploading {
+		return TorrentStatusSeeding
+
+		// Handle paused states
+	} else if st == qbittorrent_model.StatePausedDL || st == qbittorrent_model.StateStoppedDL {
+		return TorrentStatusPaused
+
+		// Handle stopped states
 	} else if st == qbittorrent_model.StatePausedUP || st == qbittorrent_model.StateStoppedUP {
 		return TorrentStatusStopped
-	} else {
+
+		// Handle error states
+	} else if st == qbittorrent_model.StateError || st == qbittorrent_model.StateMissingFiles {
 		return TorrentStatusOther
+
+		// Handle unknown states
+	} else {
+		// Default to downloading for any unrecognized state to ensure torrents are visible
+		return TorrentStatusDownloading
 	}
 }

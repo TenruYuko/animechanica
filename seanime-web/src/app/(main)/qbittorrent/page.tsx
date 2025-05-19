@@ -13,11 +13,14 @@ export default function Page() {
     return (
         <>
             <div
-                className="w-[80%] h-[calc(100vh-15rem)] rounded-xl border  overflow-hidden mx-auto mt-10 ring-1 ring-[--border] ring-offset-2"
+                className="w-[80%] h-[calc(100vh-15rem)] rounded-xl border overflow-hidden mx-auto mt-10 ring-1 ring-[--border] ring-offset-2"
             >
                 <iframe
                     src={`http://${settings.torrent?.qbittorrentHost}:${String(settings.torrent?.qbittorrentPort)}`}
                     className="w-full h-full"
+                    allow="fullscreen"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                    referrerPolicy="no-referrer"
                 />
             </div>
         </>

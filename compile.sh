@@ -17,4 +17,6 @@ cp -r seanime-web/out/* web/
 # Build the Go server (Linux/macOS default, can be adjusted for Windows)
 go build -o seanime -trimpath -ldflags="-s -w"
 
+podman build -t seanime .
+
 echo "\nBuild complete! Web assets are in ./web and server binary is ./seanime"
