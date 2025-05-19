@@ -3,17 +3,16 @@ package torrent_client
 import (
 	"context"
 	"errors"
+	"github.com/hekmon/transmissionrpc/v3"
+	"github.com/rs/zerolog"
 	"seanime/internal/api/metadata"
 	"seanime/internal/events"
 	"seanime/internal/torrent_clients/qbittorrent"
-	qbittorrent_model "seanime/internal/torrent_clients/qbittorrent/model"
+	"seanime/internal/torrent_clients/qbittorrent/model"
 	"seanime/internal/torrent_clients/transmission"
 	"seanime/internal/torrents/torrent"
 	"strconv"
 	"time"
-
-	"github.com/hekmon/transmissionrpc/v3"
-	"github.com/rs/zerolog"
 )
 
 const (
@@ -133,35 +132,11 @@ func (r *Repository) TorrentExists(hash string) bool {
 func (r *Repository) GetList() ([]*Torrent, error) {
 	switch r.provider {
 	case QbittorrentClient:
-		// Override the connection settings to match the container configuration
-		// Use localhost (127.0.0.1) since both Seanime and qBittorrent are in the same container
-		r.qBittorrentClient.Host = "127.0.0.1"
-		r.qBittorrentClient.Port = 8085
-		r.qBittorrentClient.Username = "admin"
-		r.qBittorrentClient.Password = "LOLmao123"
-
-		// Make sure we're logged in to qBittorrent
-		r.logger.Debug().Str("host", r.qBittorrentClient.Host).Int("port", r.qBittorrentClient.Port).Str("username", r.qBittorrentClient.Username).Msg("torrent client: Connecting to qBittorrent")
-		if err := r.qBittorrentClient.Login(); err != nil {
-			r.logger.Warn().Err(err).Msg("torrent client: Failed to login to qBittorrent, attempting to reconnect")
-			// Try to login again
-			if err := r.qBittorrentClient.Login(); err != nil {
-				r.logger.Err(err).Msg("torrent client: Error logging in to qBittorrent after retry")
-				return nil, err
-			}
-		}
-
-		// Get the list of torrents
-		r.logger.Debug().Msg("torrent client: Getting torrent list from qBittorrent")
 		torrents, err := r.qBittorrentClient.Torrent.GetList(&qbittorrent_model.GetTorrentListOptions{Filter: "all"})
 		if err != nil {
 			r.logger.Err(err).Msg("torrent client: Error while getting torrent list (qBittorrent)")
 			return nil, err
 		}
-
-		// Log the number of torrents found
-		r.logger.Debug().Int("count", len(torrents)).Msg("torrent client: Raw torrents found from qBittorrent")
-
 		return r.FromQbitTorrents(torrents), nil
 	case TransmissionClient:
 		torrents, err := r.transmission.Client.TorrentGetAll(context.Background())
@@ -188,18 +163,18 @@ func (r *Repository) GetActiveCount(ret *ActiveCount) {
 			r.logger.Err(err).Msg("torrent client: Error while getting torrent list for active count")
 			return
 		}
-
+		
 		// Log the number of torrents found
 		r.logger.Debug().Int("count", len(torrents)).Msg("torrent client: Found torrents for active count")
-
+		
 		// Process each torrent
 		for _, t := range torrents {
 			// Log the state of each torrent for debugging
 			r.logger.Debug().Str("name", t.Name).Str("hash", t.Hash).Str("state", string(t.State)).Msg("torrent client: Processing torrent state")
-
+			
 			// Map the qBittorrent state to our status
 			status := fromQbitTorrentStatus(t.State)
-
+			
 			// Update the appropriate counter
 			switch status {
 			case TorrentStatusDownloading:
@@ -210,10 +185,10 @@ func (r *Repository) GetActiveCount(ret *ActiveCount) {
 				ret.Paused++
 			}
 		}
-
+		
 		// Log the final counts
 		r.logger.Debug().Int("downloading", ret.Downloading).Int("seeding", ret.Seeding).Int("paused", ret.Paused).Msg("torrent client: Active torrent counts")
-
+		
 	case TransmissionClient:
 		torrents, err := r.transmission.Client.TorrentGet(context.Background(), []string{"id", "status", "isFinished"}, nil)
 		if err != nil {
@@ -244,15 +219,13 @@ func (r *Repository) GetActiveTorrents() ([]*Torrent, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// Log all torrents for debugging
-	r.logger.Debug().Int("total_torrents", len(torrents)).Msg("torrent client: Found torrents in GetActiveTorrents")
+	var active []*Torrent
 	for _, t := range torrents {
-		r.logger.Debug().Str("name", t.Name).Str("hash", t.Hash).Str("status", string(t.Status)).Msg("torrent client: Torrent details")
+		if t.Status == TorrentStatusDownloading || t.Status == TorrentStatusSeeding || t.Status == TorrentStatusPaused {
+			active = append(active, t)
+		}
 	}
-
-	// Return all torrents instead of filtering by status
-	return torrents, nil
+	return active, nil
 }
 
 func (r *Repository) AddMagnets(magnets []string, dest string) error {
@@ -263,30 +236,9 @@ func (r *Repository) AddMagnets(magnets []string, dest string) error {
 		return nil
 	}
 
-	// Make sure we're using the correct connection settings
-	if r.provider == QbittorrentClient {
-		// Override the connection settings to match the container configuration
-		r.qBittorrentClient.Host = "127.0.0.1"
-		r.qBittorrentClient.Port = 8085
-		r.qBittorrentClient.Username = "admin"
-		r.qBittorrentClient.Password = "LOLmao123"
-		
-		// Make sure we're logged in
-		r.logger.Debug().Str("host", r.qBittorrentClient.Host).Int("port", r.qBittorrentClient.Port).Str("username", r.qBittorrentClient.Username).Msg("torrent client: Connecting to qBittorrent before adding magnets")
-		if err := r.qBittorrentClient.Login(); err != nil {
-			r.logger.Warn().Err(err).Msg("torrent client: Failed to login to qBittorrent before adding magnets, attempting to reconnect")
-			// Try to login again
-			if err := r.qBittorrentClient.Login(); err != nil {
-				r.logger.Err(err).Msg("torrent client: Error logging in to qBittorrent after retry")
-				return err
-			}
-		}
-	}
-
 	var err error
 	switch r.provider {
 	case QbittorrentClient:
-		r.logger.Debug().Str("destination", dest).Msg("torrent client: Adding magnets to qBittorrent")
 		err = r.qBittorrentClient.Torrent.AddURLs(magnets, &qbittorrent_model.AddTorrentsOptions{
 			Savepath: dest,
 			Tags:     r.qBittorrentClient.Tags,
@@ -479,3 +431,118 @@ func (r *Repository) GetFiles(hash string) (filenames []string, err error) {
 
 	return
 }
+
+	return
+}
+
+						r.logger.Debug().Str("hash", hash).Int("count", len(transmissionFiles)).Msg("torrent client: Retrieved torrent files")
+						for _, f := range transmissionFiles {
+							filenames = append(filenames, f.Name)
+						}
+						return
+					}
+				}
+			}
+		}
+	}()
+
+	<-done // wait for the files to be retrieved
+
+	return
+}
+
+
+	return
+}
+
+}
+
+
+
+					}
+				case TransmissionClient:
+					torrents, err := r.transmission.Client.TorrentGetAllForHashes(context.Background(), []string{hash})
+					if err == nil && len(torrents) > 0 && torrents[0].Files != nil && len(torrents[0].Files) > 0 {
+						transmissionFiles := torrents[0].Files
+						r.logger.Debug().Str("hash", hash).Int("count", len(transmissionFiles)).Msg("torrent client: Retrieved torrent files")
+						for _, f := range transmissionFiles {
+							filenames = append(filenames, f.Name)
+						}
+						return
+					}
+				}
+			}
+		}
+	}()
+
+	<-done // wait for the files to be retrieved
+
+	return
+}
+
+						r.logger.Debug().Str("hash", hash).Int("count", len(qbitFiles)).Msg("torrent client: Retrieved torrent files")
+						for _, f := range qbitFiles {
+							filenames = append(filenames, f.Name)
+						}
+						return
+					}
+				case TransmissionClient:
+					torrents, err := r.transmission.Client.TorrentGetAllForHashes(context.Background(), []string{hash})
+					if err == nil && len(torrents) > 0 && torrents[0].Files != nil && len(torrents[0].Files) > 0 {
+						transmissionFiles := torrents[0].Files
+						r.logger.Debug().Str("hash", hash).Int("count", len(transmissionFiles)).Msg("torrent client: Retrieved torrent files")
+						for _, f := range transmissionFiles {
+							filenames = append(filenames, f.Name)
+						}
+						return
+					}
+				}
+			}
+		}
+	}()
+
+	<-done // wait for the files to be retrieved
+
+	return
+}
+
+			select {
+			case <-ctx.Done():
+				err = errors.New("torrent client: Unable to retrieve torrent files (timeout)")
+				return
+			case <-ticker.C:
+				switch r.provider {
+				case QbittorrentClient:
+					qbitFiles, err := r.qBittorrentClient.Torrent.GetContents(hash)
+					if err == nil && qbitFiles != nil && len(qbitFiles) > 0 {
+						r.logger.Debug().Str("hash", hash).Int("count", len(qbitFiles)).Msg("torrent client: Retrieved torrent files")
+						for _, f := range qbitFiles {
+							filenames = append(filenames, f.Name)
+						}
+						return
+					}
+				case TransmissionClient:
+					torrents, err := r.transmission.Client.TorrentGetAllForHashes(context.Background(), []string{hash})
+					if err == nil && len(torrents) > 0 && torrents[0].Files != nil && len(torrents[0].Files) > 0 {
+						transmissionFiles := torrents[0].Files
+						r.logger.Debug().Str("hash", hash).Int("count", len(transmissionFiles)).Msg("torrent client: Retrieved torrent files")
+						for _, f := range transmissionFiles {
+							filenames = append(filenames, f.Name)
+						}
+						return
+					}
+				}
+			}
+		}
+	}()
+
+	<-done // wait for the files to be retrieved
+
+	return
+}
+
+	<-done // wait for the files to be retrieved
+
+	return
+}
+
