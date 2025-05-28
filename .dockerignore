@@ -1,0 +1,35 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies
+node_modules
+**/node_modules
+
+# Build output
+**/dist
+**/build
+**/.next
+seanime-web/out
+
+# Development files
+.idea
+.vscode
+*.log
+*.swp
+*.swo
+
+# Test files
+test/
+**/__tests__
+**/*.test.*
+**/*.spec.*
+
+# Documentation
+docs/
+*.md
+
+# Misc
+.env*
+!.env.web
+.DS_Store
