@@ -36,6 +36,14 @@ var (
 )
 
 type (
+	// ChapterContainer is used to display the list of chapters from a provider in the client.
+	// It is cached in a unique file cache bucket with a key of the format: {provider}${mediaId}
+	ChapterContainer struct {
+		MediaId  int                             `json:"mediaId"`
+		Provider string                         `json:"provider"`
+		Chapters []*hibikemanga.ChapterDetails `json:"chapters"`
+	}
+
 	// VolumeContainer is used to display the list of volumes from a provider in the client.
 	// It is cached in a unique file cache bucket with a key of the format: {provider}${mediaId}
 	VolumeContainer struct {
@@ -249,6 +257,76 @@ func (r *Repository) GetMangaChapterContainer(opts *GetMangaChapterContainerOpti
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// getMangaId retrieves the manga ID for the given provider, mediaId, titles, and year.
+// It first checks for a manual mapping in the database, then searches if no mapping is found.
+func (r *Repository) getMangaId(provider string, mediaId int, titles []*string, year int) (string, error) {
+	// Check for manual mapping in the database
+	mapping, found := r.db.GetMangaMapping(provider, mediaId)
+	if found {
+		r.logger.Debug().Str("mangaId", mapping.MangaID).Msg("manga: Using manual mapping")
+		return mapping.MangaID, nil
+	}
+
+	// Get provider extension
+	baseExt, found := r.providerExtensionBank.Get(provider)
+	if !found {
+		return "", fmt.Errorf("manga: Provider extension not found: %s", provider)
+	}
+
+	providerExtension, ok := baseExt.(extension.MangaProviderExtension)
+	if !ok {
+		return "", fmt.Errorf("manga: Invalid extension type for provider: %s", provider)
+	}
+
+	// Search for manga if no mapping found
+	r.logger.Trace().Msg("manga: Searching for manga")
+
+	if titles == nil {
+		return "", ErrNoTitlesProvided
+	}
+
+	titles = lo.Filter(titles, func(title *string, _ int) bool {
+		return util.IsMostlyLatinString(*title)
+	})
+
+	var searchRes []*hibikemanga.SearchResult
+	var err error
+
+	for _, title := range titles {
+		var _searchRes []*hibikemanga.SearchResult
+
+		_searchRes, err = providerExtension.GetProvider().Search(hibikemanga.SearchOptions{
+			Query: *title,
+			Year:  year,
+		})
+		if err == nil {
+			HydrateSearchResultSearchRating(_searchRes, title)
+			searchRes = append(searchRes, _searchRes...)
+		} else {
+			r.logger.Warn().Err(err).Msg("manga: Search failed")
+		}
+	}
+
+	if searchRes == nil || len(searchRes) == 0 {
+		r.logger.Error().Msg("manga: No search results found")
+		if err != nil {
+			return "", fmt.Errorf("%w, %w", ErrNoResults, err)
+		} else {
+			return "", ErrNoResults
+		}
+	}
+
+	// Overwrite the provider just in case
+	for _, res := range searchRes {
+		res.Provider = provider
+	}
+
+	bestRes := GetBestSearchResult(searchRes)
+	return bestRes.ID, nil
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // GetMangaVolumeContainer returns the VolumeContainer for a manga entry based on the provider.
 // Like ChapterContainer, it is cached in a file cache bucket.
 func (r *Repository) GetMangaVolumeContainer(opts *GetMangaChapterContainerOptions) (ret *VolumeContainer, err error) {
@@ -268,17 +346,23 @@ func (r *Repository) GetMangaVolumeContainer(opts *GetMangaChapterContainerOptio
 
 	// Check cache first
 	var container *VolumeContainer
-	err = r.fileCacher.Get(containerBucket, volumeContainerKey, &container)
-	if err == nil && container != nil {
+	found, err := r.fileCacher.Get(containerBucket, volumeContainerKey, &container)
+	if err == nil && found && container != nil {
 		r.logger.Trace().Str("bucket", containerBucket.Name()).Msg("manga: Retrieved volumes from cache")
 		return container, nil
 	}
 
 	// Get extension
-	ext := r.providerExtensionBank.Get(provider)
-	if ext == nil {
+	baseExt, found := r.providerExtensionBank.Get(provider)
+	if !found || baseExt == nil {
 		r.logger.Error().Str("provider", provider).Msg("manga: Extension not found")
 		return nil, fmt.Errorf("manga: Extension not found")
+	}
+
+	providerExtension, ok := baseExt.(extension.MangaProviderExtension)
+	if !ok {
+		r.logger.Error().Str("provider", provider).Msg("manga: Invalid extension type")
+		return nil, fmt.Errorf("manga: Invalid extension type for provider: %s", provider)
 	}
 
 	// Search for manga ID first if not mapped
@@ -289,7 +373,7 @@ func (r *Repository) GetMangaVolumeContainer(opts *GetMangaChapterContainerOptio
 	}
 
 	// Get volumes from provider
-	volumeList, err := ext.FindVolumes(mangaId)
+	volumeList, err := providerExtension.GetProvider().FindVolumes(mangaId)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("manga: Failed to get volumes")
 		return nil, ErrNoVolumes

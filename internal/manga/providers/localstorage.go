@@ -121,6 +121,28 @@ func (p *LocalStorageProvider) FindChapters(mangaID string) ([]*hibikemanga.Chap
 	return chapters, nil
 }
 
+// FindVolumes lists volumes for a specific manga
+func (p *LocalStorageProvider) FindVolumes(id string) ([]*hibikemanga.VolumeDetails, error) {
+	// For local storage, we'll treat all chapters as part of a single volume
+	// or group them by volume if the filename contains volume information
+	chapters, err := p.FindChapters(id)
+	if err != nil {
+		return nil, err
+	}
+
+	// For simplicity, put all chapters in a single volume
+	// This can be enhanced later to parse volume information from filenames
+	volume := &hibikemanga.VolumeDetails{
+		ID:       "vol-1",
+		Number:   "1",
+		Title:    "Volume 1",
+		Provider: "local-storage",
+		Chapters: chapters,
+	}
+
+	return []*hibikemanga.VolumeDetails{volume}, nil
+}
+
 // FindChapterPages implements the Provider interface for retrieving chapter pages
 func (p *LocalStorageProvider) FindChapterPages(id string) ([]*hibikemanga.ChapterPage, error) {
 	// Assume id is in format mangaID/chapterID

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"seanime/internal/api/anilist"
 	"seanime/internal/manga"
 	"seanime/internal/util/result"

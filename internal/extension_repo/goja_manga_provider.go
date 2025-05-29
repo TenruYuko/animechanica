@@ -106,6 +106,29 @@ func (g *GojaMangaProvider) FindChapters(id string) (ret []*hibikemanga.ChapterD
 	return ret, nil
 }
 
+func (g *GojaMangaProvider) FindVolumes(id string) (ret []*hibikemanga.VolumeDetails, err error) {
+	defer util.HandlePanicInModuleWithError(g.ext.ID+".FindVolumes", &err)
+
+	method, err := g.callClassMethod(context.Background(), "findVolumes", id)
+
+	promiseRes, err := g.waitForPromise(method)
+	if err != nil {
+		return nil, err
+	}
+
+	err = g.unmarshalValue(promiseRes, &ret)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set the provider
+	for i := range ret {
+		ret[i].Provider = g.ext.ID
+	}
+
+	return ret, nil
+}
+
 func (g *GojaMangaProvider) FindChapterPages(id string) (ret []*hibikemanga.ChapterPage, err error) {
 	defer util.HandlePanicInModuleWithError(g.ext.ID+".FindChapterPages", &err)
 

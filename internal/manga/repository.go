@@ -24,7 +24,6 @@ import (
 
 var (
 	ErrNoResults            = errors.New("no results found for this media")
-	ErrNoChapters           = errors.New("no manga chapters found")
 	ErrChapterNotFound      = errors.New("chapter not found")
 	ErrChapterNotDownloaded = errors.New("chapter not downloaded")
 	ErrNoTitlesProvided     = errors.New("no titles provided")
@@ -91,7 +90,6 @@ type bucketType string
 
 const (
 	bucketTypeChapterKey                = "1"
-	bucketTypeChapter        bucketType = "chapters"
 	bucketTypePage           bucketType = "pages"
 	bucketTypePageDimensions bucketType = "page-dimensions"
 )
