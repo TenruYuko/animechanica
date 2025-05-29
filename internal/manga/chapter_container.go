@@ -43,6 +43,14 @@ type (
 		Provider string                       `json:"provider"`
 		Volumes []*hibikemanga.VolumeDetails `json:"volumes"`
 	}
+
+	// ChapterContainer is used to display the list of chapters from a provider in the client.
+	// It is cached in a unique file cache bucket with a key of the format: {provider}${mediaId}
+	ChapterContainer struct {
+		MediaId  int                          `json:"mediaId"`
+		Provider string                       `json:"provider"`
+		Chapters []*hibikemanga.ChapterDetails `json:"chapters"`
+	}
 )
 
 func getMangaChapterContainerCacheKey(provider string, mediaId int) string {
@@ -268,17 +276,22 @@ func (r *Repository) GetMangaVolumeContainer(opts *GetMangaChapterContainerOptio
 
 	// Check cache first
 	var container *VolumeContainer
-	err = r.fileCacher.Get(containerBucket, volumeContainerKey, &container)
-	if err == nil && container != nil {
+	_, cacheErr := r.fileCacher.Get(containerBucket, volumeContainerKey, &container)
+	if cacheErr == nil && container != nil {
 		r.logger.Trace().Str("bucket", containerBucket.Name()).Msg("manga: Retrieved volumes from cache")
 		return container, nil
 	}
 
 	// Get extension
-	ext := r.providerExtensionBank.Get(provider)
-	if ext == nil {
+	extBase, ok := r.providerExtensionBank.Get(provider)
+	if !ok || extBase == nil {
 		r.logger.Error().Str("provider", provider).Msg("manga: Extension not found")
 		return nil, fmt.Errorf("manga: Extension not found")
+	}
+	ext, ok := extBase.(extension.MangaProviderExtension)
+	if !ok || ext == nil {
+		r.logger.Error().Str("provider", provider).Msg("manga: Extension not found or invalid type")
+		return nil, fmt.Errorf("manga: Extension not found or invalid type")
 	}
 
 	// Search for manga ID first if not mapped
@@ -289,7 +302,7 @@ func (r *Repository) GetMangaVolumeContainer(opts *GetMangaChapterContainerOptio
 	}
 
 	// Get volumes from provider
-	volumeList, err := ext.FindVolumes(mangaId)
+	volumeList, err := ext.GetProvider().FindVolumes(mangaId)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("manga: Failed to get volumes")
 		return nil, ErrNoVolumes
@@ -649,4 +662,58 @@ func normalizeTitle(s string) string {
 	}, s)
 	
 	return strings.TrimSpace(normalized)
+}
+
+// getMangaId is a helper to resolve the mangaId for a provider/mediaId/titles/year combination.
+func (r *Repository) getMangaId(provider string, mediaId int, titles []*string, year int) (string, error) {
+	// Try DB mapping first
+	mapping, found := r.db.GetMangaMapping(provider, mediaId)
+	if found {
+		r.logger.Debug().Str("mangaId", mapping.MangaID).Msg("manga: Using manual mapping")
+		return mapping.MangaID, nil
+	}
+
+	if titles == nil || len(titles) == 0 {
+		return "", ErrNoTitlesProvided
+	}
+
+	extBase, ok := r.providerExtensionBank.Get(provider)
+	if !ok || extBase == nil {
+		return "", fmt.Errorf("manga: Provider not found")
+	}
+	ext, ok := extBase.(extension.MangaProviderExtension)
+	if !ok || ext == nil {
+		return "", fmt.Errorf("manga: Provider not found or invalid type")
+	}
+
+	// Filter titles to mostly latin
+	titles = lo.Filter(titles, func(title *string, _ int) bool {
+		return util.IsMostlyLatinString(*title)
+	})
+
+	var searchRes []*hibikemanga.SearchResult
+	var lastErr error
+	for _, title := range titles {
+		_searchRes, err := ext.GetProvider().Search(hibikemanga.SearchOptions{
+			Query: *title,
+			Year:  year,
+		})
+		if err == nil {
+			HydrateSearchResultSearchRating(_searchRes, title)
+			searchRes = append(searchRes, _searchRes...)
+		} else {
+			lastErr = err
+			r.logger.Warn().Err(err).Msg("manga: Search failed")
+		}
+	}
+
+	if len(searchRes) == 0 {
+		if lastErr != nil {
+			return "", fmt.Errorf("%w, %w", ErrNoResults, lastErr)
+		}
+		return "", ErrNoResults
+	}
+
+	bestRes := GetBestSearchResult(searchRes)
+	return bestRes.ID, nil
 }

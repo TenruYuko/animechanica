@@ -8,6 +8,9 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"errors"
+	"strings"
+	"path/filepath"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -592,4 +595,48 @@ func (h *Handler) HandleRemoveMangaMapping(c echo.Context) error {
 	}
 
 	return h.RespondWithData(c, true)
+}
+
+// HandleGetLocalMangaPage
+//
+//	@summary serves a page image from a CBZ file for the Internal provider.
+//	@route /api/v1/manga/local/page [GET]
+//	@returns image
+func (h *Handler) HandleGetLocalMangaPage(c echo.Context) error {
+	mangaID := c.QueryParam("mangaId")
+	chapterID := c.QueryParam("chapterId")
+	pagePath := c.QueryParam("pagePath")
+	if mangaID == "" || chapterID == "" || pagePath == "" {
+		return c.String(400, "Missing parameters")
+	}
+
+	// Get the local storage provider (assume only one for now)
+	provider, ok := h.App.GetLocalMangaProvider()
+	if !ok {
+		return c.String(500, "Local manga provider not found")
+	}
+
+	rc, err := provider.GetPage(mangaID, chapterID, pagePath)
+	if err != nil {
+		return c.String(404, "Page not found")
+	}
+	defer rc.Close()
+
+	// Guess content type from extension
+	ext := strings.ToLower(filepath.Ext(pagePath))
+	var contentType string
+	switch ext {
+	case ".jpg", ".jpeg":
+		contentType = "image/jpeg"
+	case ".png":
+		contentType = "image/png"
+	case ".gif":
+		contentType = "image/gif"
+	case ".webp":
+		contentType = "image/webp"
+	default:
+		contentType = "application/octet-stream"
+	}
+
+	return c.Stream(200, contentType, rc)
 }

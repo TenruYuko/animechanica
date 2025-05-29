@@ -251,7 +251,7 @@ export function MediaEntryCard<T extends "anime" | "manga">(props: MediaEntryCar
                                     className="w-full text-sm mt-2"
                                     tabIndex={-1}
                                 >
-                                    Read
+                                    Details
                                 </Button>
                             </SeaLink>}
 

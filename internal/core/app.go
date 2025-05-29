@@ -22,6 +22,7 @@ import (
 	"seanime/internal/library/playbackmanager"
 	"seanime/internal/library/scanner"
 	"seanime/internal/manga"
+	manga_providers "seanime/internal/manga/providers"
 	"seanime/internal/mediaplayers/mediaplayer"
 	"seanime/internal/mediaplayers/mpchc"
 	"seanime/internal/mediaplayers/mpv"
@@ -218,7 +219,11 @@ func NewApp(configOpts *ConfigOptions, selfupdater *updater.SelfUpdater) *App {
 	// Set initial metadata provider (will change if offline mode is enabled)
 	activeMetadataProvider := metadataProvider
 
-	// Initialize manga repository
+	// Initialize the local manga provider (choose the correct base dir)
+	localMangaProviderIface := manga_providers.NewLocalStorageProvider(cfg.Manga.DownloadDir)
+	localMangaProvider, _ := localMangaProviderIface.(*manga_providers.LocalStorageProvider)
+
+	// Initialize manga repository with local provider
 	mangaRepository := manga.NewRepository(&manga.NewRepositoryOptions{
 		Logger:         logger,
 		FileCacher:     fileCacher,
@@ -227,7 +232,7 @@ func NewApp(configOpts *ConfigOptions, selfupdater *updater.SelfUpdater) *App {
 		WsEventManager: wsEventManager,
 		DownloadDir:    cfg.Manga.DownloadDir,
 		Database:       database,
-	})
+	}, localMangaProvider)
 
 	// Initialize Anilist platform
 	anilistPlatform := anilist_platform.NewAnilistPlatform(anilistCW, logger)
@@ -389,4 +394,12 @@ func (a *App) Cleanup() {
 	for _, f := range a.Cleanups {
 		f()
 	}
+}
+
+func (a *App) GetLocalMangaProvider() (*manga_providers.LocalStorageProvider, bool) {
+	if a.MangaRepository == nil {
+		return nil, false
+	}
+	provider := a.MangaRepository.GetLocalProvider()
+	return provider, provider != nil
 }

@@ -11,6 +11,7 @@ import (
 	"seanime/internal/events"
 	"seanime/internal/extension"
 	"seanime/internal/util/filecache"
+	manga_providers "seanime/internal/manga/providers"
 	"strconv"
 	"strings"
 	"sync"
@@ -24,7 +25,6 @@ import (
 
 var (
 	ErrNoResults            = errors.New("no results found for this media")
-	ErrNoChapters           = errors.New("no manga chapters found")
 	ErrChapterNotFound      = errors.New("chapter not found")
 	ErrChapterNotDownloaded = errors.New("chapter not downloaded")
 	ErrNoTitlesProvided     = errors.New("no titles provided")
@@ -41,6 +41,7 @@ type (
 		mu                    sync.Mutex
 		downloadDir           string
 		db                    *db.Database
+		localProvider         *manga_providers.LocalStorageProvider
 	}
 
 	NewRepositoryOptions struct {
@@ -54,7 +55,8 @@ type (
 	}
 )
 
-func NewRepository(opts *NewRepositoryOptions) *Repository {
+// Update NewRepository to accept localProvider
+func NewRepository(opts *NewRepositoryOptions, localProvider *manga_providers.LocalStorageProvider) *Repository {
 	r := &Repository{
 		logger:                opts.Logger,
 		fileCacher:            opts.FileCacher,
@@ -64,8 +66,14 @@ func NewRepository(opts *NewRepositoryOptions) *Repository {
 		downloadDir:           opts.DownloadDir,
 		providerExtensionBank: extension.NewUnifiedBank(),
 		db:                    opts.Database,
+		localProvider:         localProvider,
 	}
 	return r
+}
+
+// Getter for the local provider
+func (r *Repository) GetLocalProvider() *manga_providers.LocalStorageProvider {
+	return r.localProvider
 }
 
 func (r *Repository) InitExtensionBank(bank *extension.UnifiedBank) {
@@ -91,7 +99,6 @@ type bucketType string
 
 const (
 	bucketTypeChapterKey                = "1"
-	bucketTypeChapter        bucketType = "chapters"
 	bucketTypePage           bucketType = "pages"
 	bucketTypePageDimensions bucketType = "page-dimensions"
 )

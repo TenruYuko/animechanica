@@ -26,7 +26,7 @@ func GetMockRepository(t *testing.T, db *db.Database) *Repository {
 		WsEventManager: events.NewMockWSEventManager(logger),
 		DownloadDir:    filepath.Join(test_utils.ConfigData.Path.DataDir, "manga"),
 		Database:       db,
-	})
+	}, nil)
 
 	return repository
 }
