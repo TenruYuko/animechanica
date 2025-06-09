@@ -21,25 +21,42 @@ services:
       - OPENVPN_PASSWORD_FILE=/gluetun/mullvad/mullvad_userpass.txt
       - OPENVPN_CUSTOM_CONFIG=/gluetun/mullvad/mullvad_ch_zrh.conf
       
-      # Kill switch and firewall seteretings
+      # Kill switch and firewall settings
       - FIREWALL=on
       - FIREWALL_OUTBOUND_SUBNETS=192.168.0.0/16,172.16.0.0/12,10.0.0.0/8
       
-      # DNS settings
+      # DNS settings for faster resolution
       - DOT=off
-      - DNS_KEEP_NAMESERVER=on
+      - DNS_KEEP_NAMESERVER=off
+      - DNS_ADDRESS=1.1.1.1,1.0.0.1,8.8.8.8,8.8.4.4
+      
+      # Performance optimizations
+      - OPENVPN_FLAGS=--fast-io --tun-mtu 1500 --fragment 1300 --mssfix 1200
+      - LOG_LEVEL=info
       
       # Timezone
       - TZ=America/Los_Angeles
       
-      # Health check settings
-      - HEALTH_VPN_DURATION_INITIAL=30s
-      - HEALTH_VPN_DURATION_ADDITION=5s
+      # Health check settings (reduced frequency for less overhead)
+      - HEALTH_VPN_DURATION_INITIAL=60s
+      - HEALTH_VPN_DURATION_ADDITION=30s
     restart: unless-stopped
     security_opt:
       - label=type:container_runtime_t
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
+      - net.core.rmem_max=134217728
+      - net.core.wmem_max=134217728
+      - net.core.netdev_max_backlog=5000
+      - net.ipv4.tcp_congestion_control=bbr
+      - net.ipv4.tcp_window_scaling=1
+      - net.ipv4.tcp_timestamps=1
+      - net.ipv4.tcp_sack=1
+      - net.ipv4.tcp_fastopen=3
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
 
   seanime:
     build:
@@ -58,6 +75,13 @@ services:
     environment:
       - TZ=America/Los_Angeles
       - SKIP_VPN_SETUP=true  # Skip VPN setup since Gluetun handles it
+      # Performance optimizations
+      - GOMAXPROCS=0
+      - GOMEMLIMIT=1GiB
     restart: unless-stopped
     security_opt:
       - label=type:container_runtime_t
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536

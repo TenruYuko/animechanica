@@ -9,6 +9,16 @@ cd "$SCRIPT_DIR"
 
 echo "🚀 Starting Seanime with Gluetun VPN..."
 
+# Check for network optimization
+echo "🔧 Network Performance Check..."
+current_rmem=$(sysctl -n net.core.rmem_max 2>/dev/null || echo "0")
+if [ "$current_rmem" -lt 134217728 ]; then
+    echo "⚠️  Network buffers not optimized for VPN performance"
+    echo "💡 Run: sudo ./optimize-network.sh (for better performance)"
+else
+    echo "✅ Network settings appear optimized"
+fi
+
 # Check Mullvad configuration
 echo "📋 Checking Mullvad configuration..."
 ./check-mullvad-config.sh || {
@@ -146,8 +156,14 @@ echo "Check VPN status and IP:"
 echo "  podman-compose exec gluetun wget -qO- https://ipinfo.io"
 echo "Check Seanime container IP:"
 echo "  podman-compose exec seanime curl -s https://ipinfo.io"
+echo "Test VPN performance and latency:"
+echo "  ./test-vpn-performance.sh"
+echo "Optimize host network settings:"
+echo "  sudo ./optimize-network.sh"
 echo "Monitor VPN connection:"
 echo "  podman-compose logs -f gluetun | grep -E '(INFO|ERROR)'"
+echo "Real-time latency monitoring:"
+echo "  watch -n 2 'podman-compose exec gluetun ping -c 1 8.8.8.8'"
 echo "Test kill switch (stop VPN):"
 echo "  podman-compose exec gluetun pkill -f openvpn"
 echo ""
