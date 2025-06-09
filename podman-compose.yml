@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  seanime:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: seanime
+    security_opt:
+      - label=type:container_runtime_t
+      - seccomp=unconfined
+    cap_add:
+      - NET_ADMIN  # Required for VPN
+    volumes:
+      - /aeternae/configurations/animechanica/data:/data:Z
+      - /aeternae/theater/anime/completed/:/media/anime:Z
+      - /aeternae/theater/dl_anime/:/media/dl_anime:Z
+      - /aeternae/library/dl_manga/:/media/dl_manga:Z
+      - /aeternae/configurations/animechanica/qbittorrent:/root/.config/qBittorrent:Z
+      - /aeternae/configurations/animechanica/mullvad:/mullvad:Z
+    ports:
+      - "43211:43211"  # Seanime
+      - "8085:8085"    # qBittorrent
+    environment:
+      - TZ=America/Los_Angeles
+    restart: unless-stopped
