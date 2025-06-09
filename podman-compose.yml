@@ -1,26 +1,63 @@
-version: '3'
+version: '3.8'
 
 services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - "43211:43211"  # Seanime
+      - "8085:8085"    # qBittorrent
+    volumes:
+      - /aeternae/configurations/animechanica/mullvad:/gluetun/mullvad:Z
+    environment:
+      # VPN settings
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=openvpn
+      - OPENVPN_USER_FILE=/gluetun/mullvad/mullvad_userpass.txt
+      - OPENVPN_PASSWORD_FILE=/gluetun/mullvad/mullvad_userpass.txt
+      - OPENVPN_CUSTOM_CONFIG=/gluetun/mullvad/mullvad_ch_zrh.conf
+      
+      # Kill switch and firewall seteretings
+      - FIREWALL=on
+      - FIREWALL_OUTBOUND_SUBNETS=192.168.0.0/16,172.16.0.0/12,10.0.0.0/8
+      
+      # DNS settings
+      - DOT=off
+      - DNS_KEEP_NAMESERVER=on
+      
+      # Timezone
+      - TZ=America/Los_Angeles
+      
+      # Health check settings
+      - HEALTH_VPN_DURATION_INITIAL=30s
+      - HEALTH_VPN_DURATION_ADDITION=5s
+    restart: unless-stopped
+    security_opt:
+      - label=type:container_runtime_t
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+
   seanime:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: seanime
-    security_opt:
-      - label=type:container_runtime_t
-      - seccomp=unconfined
-    cap_add:
-      - NET_ADMIN  # Required for VPN
+    depends_on:
+      - gluetun
+    network_mode: "service:gluetun"
     volumes:
       - /aeternae/configurations/animechanica/data:/data:Z
       - /aeternae/theater/anime/completed/:/media/anime:Z
       - /aeternae/theater/dl_anime/:/media/dl_anime:Z
       - /aeternae/library/dl_manga/:/media/dl_manga:Z
       - /aeternae/configurations/animechanica/qbittorrent:/root/.config/qBittorrent:Z
-      - /aeternae/configurations/animechanica/mullvad:/mullvad:Z
-    ports:
-      - "43211:43211"  # Seanime
-      - "8085:8085"    # qBittorrent
     environment:
       - TZ=America/Los_Angeles
+      - SKIP_VPN_SETUP=true  # Skip VPN setup since Gluetun handles it
     restart: unless-stopped
+    security_opt:
+      - label=type:container_runtime_t

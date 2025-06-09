@@ -20,8 +20,10 @@ echo "nameserver 1.1.1.1" > /etc/resolv.conf
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 log "DNS configuration complete"
 
-# Check if Mullvad configuration files exist
-if [ -f "/mullvad/mullvad_se_mma.conf" ] && [ -f "/mullvad/mullvad_ca.crt" ] && [ -f "/mullvad/mullvad_userpass.txt" ]; then
+# Check if we should skip VPN setup (when using Gluetun)
+if [ "$SKIP_VPN_SETUP" = "true" ]; then
+  log "Skipping VPN setup - using external VPN service (Gluetun)"
+elif [ -f "/mullvad/mullvad_ca.crt" ] && [ -f "/mullvad/mullvad_userpass.txt" ] && ls /mullvad/*.conf >/dev/null 2>&1; then
   log "Setting up Mullvad VPN..."
   
   # Create necessary directories

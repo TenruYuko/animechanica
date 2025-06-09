@@ -37,32 +37,3 @@ if podman container exists seanime; then
   podman stop seanime || true
   podman rm seanime || true
 fi
-
-# Run the container
-podman run -d --name seanime \
-  --security-opt label=type:container_runtime_t \
-  --security-opt seccomp=unconfined \
-  --cap-add=NET_ADMIN \
-  -v /aeternae/configurations/animechanica/data:/data:Z \
-  -v /aeternae/theater/anime/completed/:/media/anime:Z \
-  -v /aeternae/theater/dl_anime/:/media/dl_anime:Z \
-  -v /aeternae/library/dl_manga/:/media/dl_manga:Z \
-  -v /aeternae/configurations/animechanica/qbittorrent:/root/.config/qBittorrent:Z \
-  -v /aeternae/configurations/animechanica/mullvad:/mullvad:Z \
-  -p 43211:43211 -p 8085:8085 \
-  -e TZ=America/Los_Angeles \
-  --restart unless-stopped \
-  localhost/seanime:latest
-
-echo "Seanime container started!"
-echo "Seanime is available at: http://localhost:43211"
-echo "qBittorrent is available at: http://localhost:8085"
-echo ""
-echo "To view logs:"
-echo "podman logs -f seanime"
-echo ""
-echo "To stop the container:"
-echo "podman stop seanime"
-echo ""
-echo "To restart the container:"
-echo "podman restart seanime"
