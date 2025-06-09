@@ -13,6 +13,3 @@ if [ -d "web" ]; then
 fi
 mkdir web
 cp -r seanime-web/out/* web/
-
-# Build the Go server (Linux/macOS default, can be adjusted for Windows)
-echo "\nBuild complete! Web assets are in ./web and server binary is ./seanime"
