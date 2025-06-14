@@ -251,9 +251,9 @@ export const API_ENDPOINTS = {
     AUTH: {
         /**
          *  @description
-         *  Route logs in the user by saving the JWT token in the database.
+         *  Route logs in the user by saving the JWT token in the database and creating a session.
          *  This is called when the JWT token is obtained from AniList after logging in with redirection on the client.
-         *  It also fetches the Viewer data from AniList and saves it in the database.
+         *  It also fetches the Viewer data from AniList and creates a user session.
          *  It creates a new handlers.Status and refreshes App modules.
          */
         Login: {
@@ -263,14 +263,25 @@ export const API_ENDPOINTS = {
         },
         /**
          *  @description
-         *  Route logs out the user by removing JWT token from the database.
-         *  It removes JWT token and Viewer data from the database.
+         *  Route logs out the user by removing their session.
+         *  It removes the user's session and clears the session cookie.
          *  It creates a new handlers.Status and refreshes App modules.
          */
         Logout: {
             key: "AUTH-logout",
             methods: ["POST"],
             endpoint: "/api/v1/auth/logout",
+        },
+        /**
+         *  @description
+         *  Route checks if the user has a valid session and redirects to login if not.
+         *  This is called to verify if the user has a valid session.
+         *  If not, it returns a response indicating the user should be redirected to the login page.
+         */
+        CheckSession: {
+            key: "AUTH-check-session",
+            methods: ["GET"],
+            endpoint: "/api/v1/auth/check-session",
         },
     },
     AUTO_DOWNLOADER: {
@@ -363,6 +374,28 @@ export const API_ENDPOINTS = {
             key: "AUTO-DOWNLOADER-delete-auto-downloader-item",
             methods: ["DELETE"],
             endpoint: "/api/v1/auto-downloader/item",
+        },
+    },
+    CHARACTER: {
+        /**
+         *  @description
+         *  Route returns detailed information about a character by ID.
+         *  This endpoint fetches comprehensive character data from AniList including character details, media appearances, and voice actors.
+         */
+        GetCharacterDetails: {
+            key: "CHARACTER-get-character-details",
+            methods: ["GET"],
+            endpoint: "/api/v1/character/{id}",
+        },
+        /**
+         *  @description
+         *  Route returns media appearances for a character with pagination.
+         *  This endpoint fetches paginated media appearances for a character from AniList.
+         */
+        GetCharacterMedia: {
+            key: "CHARACTER-get-character-media",
+            methods: ["POST"],
+            endpoint: "/api/v1/character/{id}/media",
         },
     },
     CONTINUITY: {
@@ -1206,8 +1239,8 @@ export const API_ENDPOINTS = {
          *  Route returns the episode list for the given media and provider.
          *  It returns the episode list for the given media and provider.
          *  The episodes are cached using a file cache.
-         *  The episode list is just a list of episodes with no video sources, it's what the client uses to display the episodes and subsequently
-         *     fetch the sources. The episode list might be nil or empty if nothing could be found, but the media will always be returned.
+         *  The episode list is just a list of episodes with no video sources, it's what the client uses to display the episodes and subsequently fetch the sources.
+         *  The episode list might be nil or empty if nothing could be found, but the media will always be returned.
          */
         GetOnlineStreamEpisodeList: {
             key: "ONLINESTREAM-get-online-stream-episode-list",

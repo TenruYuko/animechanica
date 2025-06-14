@@ -291,6 +291,15 @@
 //     })
 // }
 
+// export function useCheckSession() {
+//     return useServerQuery<{redirectToLogin: boolean}>({
+//         endpoint: API_ENDPOINTS.AUTH.CheckSession.endpoint,
+//         method: API_ENDPOINTS.AUTH.CheckSession.methods[0],
+//         queryKey: [API_ENDPOINTS.AUTH.CheckSession.key],
+//         enabled: true,
+//     })
+// }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // auto_downloader
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -380,6 +389,30 @@
 //         endpoint: API_ENDPOINTS.AUTO_DOWNLOADER.DeleteAutoDownloaderItem.endpoint.replace("{id}", String(id)),
 //         method: API_ENDPOINTS.AUTO_DOWNLOADER.DeleteAutoDownloaderItem.methods[0],
 //         mutationKey: [API_ENDPOINTS.AUTO_DOWNLOADER.DeleteAutoDownloaderItem.key],
+//         onSuccess: async () => {
+// 
+//         },
+//     })
+// }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// character
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// export function useGetCharacterDetails() {
+//     return useServerQuery<AL_CharacterDetailsByID_Character>({
+//         endpoint: API_ENDPOINTS.CHARACTER.GetCharacterDetails.endpoint,
+//         method: API_ENDPOINTS.CHARACTER.GetCharacterDetails.methods[0],
+//         queryKey: [API_ENDPOINTS.CHARACTER.GetCharacterDetails.key],
+//         enabled: true,
+//     })
+// }
+
+// export function useGetCharacterMedia() {
+//     return useServerMutation<AL_CharacterDetailsByID_Character_Media, GetCharacterMedia_Variables>({
+//         endpoint: API_ENDPOINTS.CHARACTER.GetCharacterMedia.endpoint,
+//         method: API_ENDPOINTS.CHARACTER.GetCharacterMedia.methods[0],
+//         mutationKey: [API_ENDPOINTS.CHARACTER.GetCharacterMedia.key],
 //         onSuccess: async () => {
 // 
 //         },

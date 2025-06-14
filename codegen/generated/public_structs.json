@@ -7036,6 +7036,1211 @@
   {
     "filepath": "../internal/api/anilist/client_gen.go",
     "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Name",
+    "formattedName": "AL_CharacterDetailsByID_Character_Name",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Full",
+        "jsonName": "full",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Native",
+        "jsonName": "native",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Alternative",
+        "jsonName": "alternative",
+        "goType": "[]string",
+        "typescriptType": "Array\u003cstring\u003e",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Image",
+    "formattedName": "AL_CharacterDetailsByID_Character_Image",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Large",
+        "jsonName": "large",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Medium",
+        "jsonName": "medium",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_DateOfBirth",
+    "formattedName": "AL_CharacterDetailsByID_Character_DateOfBirth",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Year",
+        "jsonName": "year",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Month",
+        "jsonName": "month",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Day",
+        "jsonName": "day",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Media_Edges_Node_Title",
+    "formattedName": "AL_CharacterDetailsByID_Character_Media_Edges_Node_Title",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Romaji",
+        "jsonName": "romaji",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "English",
+        "jsonName": "english",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Native",
+        "jsonName": "native",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Media_Edges_Node_CoverImage",
+    "formattedName": "AL_CharacterDetailsByID_Character_Media_Edges_Node_CoverImage",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Large",
+        "jsonName": "large",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Medium",
+        "jsonName": "medium",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Media_Edges_Node_StartDate",
+    "formattedName": "AL_CharacterDetailsByID_Character_Media_Edges_Node_StartDate",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Year",
+        "jsonName": "year",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Month",
+        "jsonName": "month",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Day",
+        "jsonName": "day",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Media_Edges_Node_EndDate",
+    "formattedName": "AL_CharacterDetailsByID_Character_Media_Edges_Node_EndDate",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Year",
+        "jsonName": "year",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Month",
+        "jsonName": "month",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Day",
+        "jsonName": "day",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Media_Edges_Node",
+    "formattedName": "AL_CharacterDetailsByID_Character_Media_Edges_Node",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "ID",
+        "jsonName": "id",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": true,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Title",
+        "jsonName": "title",
+        "goType": "CharacterDetailsByID_Character_Media_Edges_Node_Title",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node_Title",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node_Title",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Media_Edges_Node_Title",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "CoverImage",
+        "jsonName": "coverImage",
+        "goType": "CharacterDetailsByID_Character_Media_Edges_Node_CoverImage",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node_CoverImage",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node_CoverImage",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Media_Edges_Node_CoverImage",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Type",
+        "jsonName": "type",
+        "goType": "MediaType",
+        "typescriptType": "AL_MediaType",
+        "usedTypescriptType": "AL_MediaType",
+        "usedStructName": "anilist.MediaType",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Format",
+        "jsonName": "format",
+        "goType": "MediaFormat",
+        "typescriptType": "AL_MediaFormat",
+        "usedTypescriptType": "AL_MediaFormat",
+        "usedStructName": "anilist.MediaFormat",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Status",
+        "jsonName": "status",
+        "goType": "MediaStatus",
+        "typescriptType": "AL_MediaStatus",
+        "usedTypescriptType": "AL_MediaStatus",
+        "usedStructName": "anilist.MediaStatus",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "StartDate",
+        "jsonName": "startDate",
+        "goType": "CharacterDetailsByID_Character_Media_Edges_Node_StartDate",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node_StartDate",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node_StartDate",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Media_Edges_Node_StartDate",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "EndDate",
+        "jsonName": "endDate",
+        "goType": "CharacterDetailsByID_Character_Media_Edges_Node_EndDate",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node_EndDate",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node_EndDate",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Media_Edges_Node_EndDate",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Season",
+        "jsonName": "season",
+        "goType": "MediaSeason",
+        "typescriptType": "AL_MediaSeason",
+        "usedTypescriptType": "AL_MediaSeason",
+        "usedStructName": "anilist.MediaSeason",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "SeasonYear",
+        "jsonName": "seasonYear",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Episodes",
+        "jsonName": "episodes",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Chapters",
+        "jsonName": "chapters",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Volumes",
+        "jsonName": "volumes",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Genres",
+        "jsonName": "genres",
+        "goType": "[]string",
+        "typescriptType": "Array\u003cstring\u003e",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "AverageScore",
+        "jsonName": "averageScore",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Popularity",
+        "jsonName": "popularity",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Favourites",
+        "jsonName": "favourites",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "SiteURL",
+        "jsonName": "siteUrl",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Media_Edges",
+    "formattedName": "AL_CharacterDetailsByID_Character_Media_Edges",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "ID",
+        "jsonName": "id",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "CharacterRole",
+        "jsonName": "characterRole",
+        "goType": "CharacterRole",
+        "typescriptType": "AL_CharacterRole",
+        "usedTypescriptType": "AL_CharacterRole",
+        "usedStructName": "anilist.CharacterRole",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Node",
+        "jsonName": "node",
+        "goType": "CharacterDetailsByID_Character_Media_Edges_Node",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Media_Edges_Node",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Media_Edges_Node",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Media_PageInfo",
+    "formattedName": "AL_CharacterDetailsByID_Character_Media_PageInfo",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Total",
+        "jsonName": "total",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "CurrentPage",
+        "jsonName": "currentPage",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "LastPage",
+        "jsonName": "lastPage",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "HasNextPage",
+        "jsonName": "hasNextPage",
+        "goType": "bool",
+        "typescriptType": "boolean",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "PerPage",
+        "jsonName": "perPage",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character_Media",
+    "formattedName": "AL_CharacterDetailsByID_Character_Media",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Edges",
+        "jsonName": "edges",
+        "goType": "[]CharacterDetailsByID_Character_Media_Edges",
+        "typescriptType": "Array\u003cAL_CharacterDetailsByID_Character_Media_Edges\u003e",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Media_Edges",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Media_Edges",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "PageInfo",
+        "jsonName": "pageInfo",
+        "goType": "CharacterDetailsByID_Character_Media_PageInfo",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Media_PageInfo",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Media_PageInfo",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Media_PageInfo",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterDetailsByID_Character",
+    "formattedName": "AL_CharacterDetailsByID_Character",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "ID",
+        "jsonName": "id",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": true,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Name",
+        "jsonName": "name",
+        "goType": "CharacterDetailsByID_Character_Name",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Name",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Name",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Name",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Image",
+        "jsonName": "image",
+        "goType": "CharacterDetailsByID_Character_Image",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Image",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Image",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Image",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Description",
+        "jsonName": "description",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "DateOfBirth",
+        "jsonName": "dateOfBirth",
+        "goType": "CharacterDetailsByID_Character_DateOfBirth",
+        "typescriptType": "AL_CharacterDetailsByID_Character_DateOfBirth",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_DateOfBirth",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_DateOfBirth",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Gender",
+        "jsonName": "gender",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Age",
+        "jsonName": "age",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "BloodType",
+        "jsonName": "bloodType",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Favourites",
+        "jsonName": "favourites",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "SiteURL",
+        "jsonName": "siteUrl",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Media",
+        "jsonName": "media",
+        "goType": "CharacterDetailsByID_Character_Media",
+        "typescriptType": "AL_CharacterDetailsByID_Character_Media",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character_Media",
+        "usedStructName": "anilist.CharacterDetailsByID_Character_Media",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_Name",
+    "formattedName": "AL_CharacterSimpleById_Character_Name",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "First",
+        "jsonName": "first",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Middle",
+        "jsonName": "middle",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Last",
+        "jsonName": "last",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Full",
+        "jsonName": "full",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Native",
+        "jsonName": "native",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Alternative",
+        "jsonName": "alternative",
+        "goType": "[]string",
+        "typescriptType": "Array\u003cstring\u003e",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "UserPreferred",
+        "jsonName": "userPreferred",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_Image",
+    "formattedName": "AL_CharacterSimpleById_Character_Image",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Large",
+        "jsonName": "large",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Medium",
+        "jsonName": "medium",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_DateOfBirth",
+    "formattedName": "AL_CharacterSimpleById_Character_DateOfBirth",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Year",
+        "jsonName": "year",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Month",
+        "jsonName": "month",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Day",
+        "jsonName": "day",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_Media_Edges_Node_Title",
+    "formattedName": "AL_CharacterSimpleById_Character_Media_Edges_Node_Title",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "UserPreferred",
+        "jsonName": "userPreferred",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Romaji",
+        "jsonName": "romaji",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "English",
+        "jsonName": "english",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Native",
+        "jsonName": "native",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_Media_Edges_Node_CoverImage",
+    "formattedName": "AL_CharacterSimpleById_Character_Media_Edges_Node_CoverImage",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Large",
+        "jsonName": "large",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Medium",
+        "jsonName": "medium",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Color",
+        "jsonName": "color",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_Media_Edges_Node",
+    "formattedName": "AL_CharacterSimpleById_Character_Media_Edges_Node",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "ID",
+        "jsonName": "id",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": true,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Title",
+        "jsonName": "title",
+        "goType": "CharacterSimpleById_Character_Media_Edges_Node_Title",
+        "typescriptType": "AL_CharacterSimpleById_Character_Media_Edges_Node_Title",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_Media_Edges_Node_Title",
+        "usedStructName": "anilist.CharacterSimpleById_Character_Media_Edges_Node_Title",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Type",
+        "jsonName": "type",
+        "goType": "MediaType",
+        "typescriptType": "AL_MediaType",
+        "usedTypescriptType": "AL_MediaType",
+        "usedStructName": "anilist.MediaType",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Format",
+        "jsonName": "format",
+        "goType": "MediaFormat",
+        "typescriptType": "AL_MediaFormat",
+        "usedTypescriptType": "AL_MediaFormat",
+        "usedStructName": "anilist.MediaFormat",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Status",
+        "jsonName": "status",
+        "goType": "MediaStatus",
+        "typescriptType": "AL_MediaStatus",
+        "usedTypescriptType": "AL_MediaStatus",
+        "usedStructName": "anilist.MediaStatus",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "CoverImage",
+        "jsonName": "coverImage",
+        "goType": "CharacterSimpleById_Character_Media_Edges_Node_CoverImage",
+        "typescriptType": "AL_CharacterSimpleById_Character_Media_Edges_Node_CoverImage",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_Media_Edges_Node_CoverImage",
+        "usedStructName": "anilist.CharacterSimpleById_Character_Media_Edges_Node_CoverImage",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_Media_Edges",
+    "formattedName": "AL_CharacterSimpleById_Character_Media_Edges",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "CharacterRole",
+        "jsonName": "characterRole",
+        "goType": "CharacterRole",
+        "typescriptType": "AL_CharacterRole",
+        "usedTypescriptType": "AL_CharacterRole",
+        "usedStructName": "anilist.CharacterRole",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Node",
+        "jsonName": "node",
+        "goType": "CharacterSimpleById_Character_Media_Edges_Node",
+        "typescriptType": "AL_CharacterSimpleById_Character_Media_Edges_Node",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_Media_Edges_Node",
+        "usedStructName": "anilist.CharacterSimpleById_Character_Media_Edges_Node",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_Media_PageInfo",
+    "formattedName": "AL_CharacterSimpleById_Character_Media_PageInfo",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Total",
+        "jsonName": "total",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "CurrentPage",
+        "jsonName": "currentPage",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "LastPage",
+        "jsonName": "lastPage",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "HasNextPage",
+        "jsonName": "hasNextPage",
+        "goType": "bool",
+        "typescriptType": "boolean",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "PerPage",
+        "jsonName": "perPage",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character_Media",
+    "formattedName": "AL_CharacterSimpleById_Character_Media",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Edges",
+        "jsonName": "edges",
+        "goType": "[]CharacterSimpleById_Character_Media_Edges",
+        "typescriptType": "Array\u003cAL_CharacterSimpleById_Character_Media_Edges\u003e",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_Media_Edges",
+        "usedStructName": "anilist.CharacterSimpleById_Character_Media_Edges",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "PageInfo",
+        "jsonName": "pageInfo",
+        "goType": "CharacterSimpleById_Character_Media_PageInfo",
+        "typescriptType": "AL_CharacterSimpleById_Character_Media_PageInfo",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_Media_PageInfo",
+        "usedStructName": "anilist.CharacterSimpleById_Character_Media_PageInfo",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleById_Character",
+    "formattedName": "AL_CharacterSimpleById_Character",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "ID",
+        "jsonName": "id",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": true,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Name",
+        "jsonName": "name",
+        "goType": "CharacterSimpleById_Character_Name",
+        "typescriptType": "AL_CharacterSimpleById_Character_Name",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_Name",
+        "usedStructName": "anilist.CharacterSimpleById_Character_Name",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Image",
+        "jsonName": "image",
+        "goType": "CharacterSimpleById_Character_Image",
+        "typescriptType": "AL_CharacterSimpleById_Character_Image",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_Image",
+        "usedStructName": "anilist.CharacterSimpleById_Character_Image",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Description",
+        "jsonName": "description",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Gender",
+        "jsonName": "gender",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "DateOfBirth",
+        "jsonName": "dateOfBirth",
+        "goType": "CharacterSimpleById_Character_DateOfBirth",
+        "typescriptType": "AL_CharacterSimpleById_Character_DateOfBirth",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_DateOfBirth",
+        "usedStructName": "anilist.CharacterSimpleById_Character_DateOfBirth",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Age",
+        "jsonName": "age",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "BloodType",
+        "jsonName": "bloodType",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "SiteURL",
+        "jsonName": "siteUrl",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Favourites",
+        "jsonName": "favourites",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Media",
+        "jsonName": "media",
+        "goType": "CharacterSimpleById_Character_Media",
+        "typescriptType": "AL_CharacterSimpleById_Character_Media",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character_Media",
+        "usedStructName": "anilist.CharacterSimpleById_Character_Media",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
     "name": "UpdateMediaListEntry_SaveMediaListEntry",
     "formattedName": "AL_UpdateMediaListEntry_SaveMediaListEntry",
     "package": "anilist",
@@ -10131,6 +11336,48 @@
   {
     "filepath": "../internal/api/anilist/client_gen.go",
     "filename": "client_gen.go",
+    "name": "CharacterDetailsByID",
+    "formattedName": "AL_CharacterDetailsByID",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Character",
+        "jsonName": "Character",
+        "goType": "CharacterDetailsByID_Character",
+        "typescriptType": "AL_CharacterDetailsByID_Character",
+        "usedTypescriptType": "AL_CharacterDetailsByID_Character",
+        "usedStructName": "anilist.CharacterDetailsByID_Character",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
+    "name": "CharacterSimpleByID",
+    "formattedName": "AL_CharacterSimpleByID",
+    "package": "anilist",
+    "fields": [
+      {
+        "name": "Character",
+        "jsonName": "Character",
+        "goType": "CharacterSimpleById_Character",
+        "typescriptType": "AL_CharacterSimpleById_Character",
+        "usedTypescriptType": "AL_CharacterSimpleById_Character",
+        "usedStructName": "anilist.CharacterSimpleById_Character",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": []
+  },
+  {
+    "filepath": "../internal/api/anilist/client_gen.go",
+    "filename": "client_gen.go",
     "name": "UpdateMediaListEntry",
     "formattedName": "AL_UpdateMediaListEntry",
     "package": "anilist",
@@ -10412,7 +11659,7 @@
     ],
     "comments": [
       " MockAnilistClientImpl is a mock implementation of the AnilistClient, used for tests.",
-      " It uses the real implementation of the AnilistClient to make requests then populates a cache with the results.",
+      " It uses the real implementation of the AnilistClient to make requests then populates a cache with the resultfunc (mock *MockAnilistClient) CharacterDetailsByID(ctx context.Context, id int, interceptors ...clientv2.RequestInterceptor) (*CharacterDetailsByID, error) {.",
       " This is to avoid making repeated requests to the AniList API during tests but still have realistic data."
     ]
   },
@@ -29588,6 +30835,77 @@
     ]
   },
   {
+    "filepath": "../internal/database/models/session.go",
+    "filename": "session.go",
+    "name": "UserSession",
+    "formattedName": "Models_UserSession",
+    "package": "models",
+    "fields": [
+      {
+        "name": "SessionID",
+        "jsonName": "sessionId",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": true,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Username",
+        "jsonName": "username",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": true,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Token",
+        "jsonName": "token",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": true,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "Viewer",
+        "jsonName": "viewer",
+        "goType": "string",
+        "typescriptType": "Array\u003cstring\u003e",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "ExpiresAt",
+        "jsonName": "expiresAt",
+        "goType": "time.Time",
+        "typescriptType": "string",
+        "usedStructName": "time.Time",
+        "required": false,
+        "public": true,
+        "comments": []
+      },
+      {
+        "name": "LastActive",
+        "jsonName": "lastActive",
+        "goType": "time.Time",
+        "typescriptType": "string",
+        "usedStructName": "time.Time",
+        "required": false,
+        "public": true,
+        "comments": []
+      }
+    ],
+    "comments": [
+      " UserSession represents a user session with an associated AniList token"
+    ],
+    "embeddedStructNames": [
+      "models.BaseModel"
+    ]
+  },
+  {
     "filepath": "../internal/debrid/client/hook_events.go",
     "filename": "hook_events.go",
     "name": "DebridAutoSelectTorrentsFetchedEvent",
@@ -37396,6 +38714,17 @@
       }
     ],
     "comments": []
+  },
+  {
+    "filepath": "../internal/handlers/manga_image.go",
+    "filename": "manga_image.go",
+    "name": "MangaImageHandler",
+    "formattedName": "MangaImageHandler",
+    "package": "handlers",
+    "fields": [],
+    "comments": [
+      " MangaImageHandler handles requests for manga images"
+    ]
   },
   {
     "filepath": "../internal/handlers/manual_dump.go",
@@ -47935,6 +49264,108 @@
       }
     ],
     "comments": []
+  },
+  {
+    "filepath": "../internal/manga/providers/internal.go",
+    "filename": "internal.go",
+    "name": "InternalStorageProvider",
+    "formattedName": "Manga_InternalStorageProvider",
+    "package": "manga_providers",
+    "fields": [
+      {
+        "name": "logger",
+        "jsonName": "logger",
+        "goType": "zerolog.Logger",
+        "typescriptType": "Logger",
+        "usedTypescriptType": "Logger",
+        "usedStructName": "zerolog.Logger",
+        "required": false,
+        "public": false,
+        "comments": []
+      },
+      {
+        "name": "baseDir",
+        "jsonName": "baseDir",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": true,
+        "public": false,
+        "comments": []
+      },
+      {
+        "name": "mangaCache",
+        "jsonName": "mangaCache",
+        "goType": "[]mangaMeta",
+        "typescriptType": "Array\u003cManga_mangaMeta\u003e",
+        "usedTypescriptType": "Manga_mangaMeta",
+        "usedStructName": "manga_providers.mangaMeta",
+        "required": false,
+        "public": false,
+        "comments": []
+      },
+      {
+        "name": "mangaCacheInit",
+        "jsonName": "mangaCacheInit",
+        "goType": "bool",
+        "typescriptType": "boolean",
+        "required": true,
+        "public": false,
+        "comments": []
+      },
+      {
+        "name": "mangaScanTotal",
+        "jsonName": "mangaScanTotal",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": true,
+        "public": false,
+        "comments": []
+      },
+      {
+        "name": "mangaScanDone",
+        "jsonName": "mangaScanDone",
+        "goType": "int",
+        "typescriptType": "number",
+        "required": true,
+        "public": false,
+        "comments": []
+      },
+      {
+        "name": "mangaScanMutex",
+        "jsonName": "mangaScanMutex",
+        "goType": "sync.Mutex",
+        "typescriptType": "Sync_Mutex",
+        "usedTypescriptType": "Sync_Mutex",
+        "usedStructName": "sync.Mutex",
+        "required": false,
+        "public": false,
+        "comments": []
+      }
+    ],
+    "comments": [
+      " InternalStorageProvider implements a provider that reads from internal storage/downloads"
+    ]
+  },
+  {
+    "filepath": "../internal/manga/providers/localstorage.go",
+    "filename": "localstorage.go",
+    "name": "LocalStorageProvider",
+    "formattedName": "Manga_LocalStorageProvider",
+    "package": "manga_providers",
+    "fields": [
+      {
+        "name": "baseDir",
+        "jsonName": "baseDir",
+        "goType": "string",
+        "typescriptType": "string",
+        "required": true,
+        "public": false,
+        "comments": []
+      }
+    ],
+    "comments": [
+      " LocalStorageProvider implements a manga provider that reads from local storage"
+    ]
   },
   {
     "filepath": "../internal/manga/providers/mangadex.go",

@@ -1,0 +1,73 @@
+query CharacterDetailsByID($id: Int!) {
+    Character(id: $id) {
+        id
+        name {
+            full
+            native
+            alternative
+        }
+        image {
+            large
+            medium
+        }
+        description
+        dateOfBirth {
+            year
+            month
+            day
+        }
+        gender
+        age
+        bloodType
+        favourites
+        siteUrl
+        media(page: 1, perPage: 25) {
+            edges {
+                id
+                characterRole
+                node {
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                    }
+                    coverImage {
+                        large
+                        medium
+                    }
+                    type
+                    format
+                    status
+                    startDate {
+                        year
+                        month
+                        day
+                    }
+                    endDate {
+                        year
+                        month
+                        day
+                    }
+                    season
+                    seasonYear
+                    episodes
+                    chapters
+                    volumes
+                    genres
+                    averageScore
+                    popularity
+                    favourites
+                    siteUrl
+                }
+            }
+            pageInfo {
+                total
+                currentPage
+                lastPage
+                hasNextPage
+                perPage
+            }
+        }
+    }
+}

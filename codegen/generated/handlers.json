@@ -1138,9 +1138,9 @@
     "comments": [
       "HandleLogin",
       "",
-      "\t@summary logs in the user by saving the JWT token in the database.",
+      "\t@summary logs in the user by saving the JWT token in the database and creating a session.",
       "\t@desc This is called when the JWT token is obtained from AniList after logging in with redirection on the client.",
-      "\t@desc It also fetches the Viewer data from AniList and saves it in the database.",
+      "\t@desc It also fetches the Viewer data from AniList and creates a user session.",
       "\t@desc It creates a new handlers.Status and refreshes App modules.",
       "\t@route /api/v1/auth/login [POST]",
       "\t@returns handlers.Status",
@@ -1149,10 +1149,10 @@
     "filepath": "internal/handlers/auth.go",
     "filename": "auth.go",
     "api": {
-      "summary": "logs in the user by saving the JWT token in the database.",
+      "summary": "logs in the user by saving the JWT token in the database and creating a session.",
       "descriptions": [
         "This is called when the JWT token is obtained from AniList after logging in with redirection on the client.",
-        "It also fetches the Viewer data from AniList and saves it in the database.",
+        "It also fetches the Viewer data from AniList and creates a user session.",
         "It creates a new handlers.Status and refreshes App modules."
       ],
       "endpoint": "/api/v1/auth/login",
@@ -1182,8 +1182,8 @@
     "comments": [
       "HandleLogout",
       "",
-      "\t@summary logs out the user by removing JWT token from the database.",
-      "\t@desc It removes JWT token and Viewer data from the database.",
+      "\t@summary logs out the user by removing their session.",
+      "\t@desc It removes the user's session and clears the session cookie.",
       "\t@desc It creates a new handlers.Status and refreshes App modules.",
       "\t@route /api/v1/auth/logout [POST]",
       "\t@returns handlers.Status",
@@ -1192,9 +1192,9 @@
     "filepath": "internal/handlers/auth.go",
     "filename": "auth.go",
     "api": {
-      "summary": "logs out the user by removing JWT token from the database.",
+      "summary": "logs out the user by removing their session.",
       "descriptions": [
-        "It removes JWT token and Viewer data from the database.",
+        "It removes the user's session and clears the session cookie.",
         "It creates a new handlers.Status and refreshes App modules."
       ],
       "endpoint": "/api/v1/auth/logout",
@@ -1206,6 +1206,38 @@
       "returns": "handlers.Status",
       "returnGoType": "handlers.Status",
       "returnTypescriptType": "Status"
+    }
+  },
+  {
+    "name": "HandleCheckSession",
+    "trimmedName": "CheckSession",
+    "comments": [
+      "HandleCheckSession",
+      "",
+      "\t@summary checks if the user has a valid session and redirects to login if not.",
+      "\t@desc This is called to verify if the user has a valid session.",
+      "\t@desc If not, it returns a response indicating the user should be redirected to the login page.",
+      "\t@route /api/v1/auth/check-session [GET]",
+      "\t@returns {redirectToLogin: boolean}",
+      ""
+    ],
+    "filepath": "internal/handlers/auth.go",
+    "filename": "auth.go",
+    "api": {
+      "summary": "checks if the user has a valid session and redirects to login if not.",
+      "descriptions": [
+        "This is called to verify if the user has a valid session.",
+        "If not, it returns a response indicating the user should be redirected to the login page."
+      ],
+      "endpoint": "/api/v1/auth/check-session",
+      "methods": [
+        "GET"
+      ],
+      "params": [],
+      "bodyFields": [],
+      "returns": "{redirectToLogin: boolean}",
+      "returnGoType": "{redirectToLogin: boolean}",
+      "returnTypescriptType": "{redirectToLogin: boolean}"
     }
   },
   {
@@ -1646,6 +1678,85 @@
       "returns": "bool",
       "returnGoType": "bool",
       "returnTypescriptType": "boolean"
+    }
+  },
+  {
+    "name": "HandleGetCharacterDetails",
+    "trimmedName": "GetCharacterDetails",
+    "comments": [
+      "HandleGetCharacterDetails",
+      "",
+      "\t@summary returns detailed information about a character by ID.",
+      "\t@desc This endpoint fetches comprehensive character data from AniList including character details, media appearances, and voice actors.",
+      "\t@route /api/v1/character/{id} [GET]",
+      "\t@returns anilist.CharacterDetailsByID_Character",
+      ""
+    ],
+    "filepath": "internal/handlers/character.go",
+    "filename": "character.go",
+    "api": {
+      "summary": "returns detailed information about a character by ID.",
+      "descriptions": [
+        "This endpoint fetches comprehensive character data from AniList including character details, media appearances, and voice actors."
+      ],
+      "endpoint": "/api/v1/character/{id}",
+      "methods": [
+        "GET"
+      ],
+      "params": [],
+      "bodyFields": [],
+      "returns": "anilist.CharacterDetailsByID_Character",
+      "returnGoType": "anilist.CharacterDetailsByID_Character",
+      "returnTypescriptType": "AL_CharacterDetailsByID_Character"
+    }
+  },
+  {
+    "name": "HandleGetCharacterMedia",
+    "trimmedName": "GetCharacterMedia",
+    "comments": [
+      "HandleGetCharacterMedia",
+      "",
+      "\t@summary returns media appearances for a character with pagination.",
+      "\t@desc This endpoint fetches paginated media appearances for a character from AniList.",
+      "\t@route /api/v1/character/{id}/media [POST]",
+      "\t@returns anilist.CharacterDetailsByID_Character_Media",
+      ""
+    ],
+    "filepath": "internal/handlers/character.go",
+    "filename": "character.go",
+    "api": {
+      "summary": "returns media appearances for a character with pagination.",
+      "descriptions": [
+        "This endpoint fetches paginated media appearances for a character from AniList."
+      ],
+      "endpoint": "/api/v1/character/{id}/media",
+      "methods": [
+        "POST"
+      ],
+      "params": [],
+      "bodyFields": [
+        {
+          "name": "Page",
+          "jsonName": "page",
+          "goType": "int",
+          "usedStructType": "",
+          "typescriptType": "number",
+          "required": true,
+          "descriptions": []
+        },
+        {
+          "name": "PerPage",
+          "jsonName": "perPage",
+          "goType": "int",
+          "usedStructType": "",
+          "typescriptType": "number",
+          "required": true,
+          "descriptions": []
+        }
+      ],
+      "returns": "anilist.CharacterDetailsByID_Character_Media",
+      "returnGoType": "anilist.CharacterDetailsByID_Character_Media",
+      "returnTypescriptType": "AL_CharacterDetailsByID_Character_Media"
     }
   },
   {
@@ -5006,6 +5117,69 @@
     }
   },
   {
+    "name": "HandleGetInternalMangaVolumeThumbnail",
+    "trimmedName": "GetInternalMangaVolumeThumbnail",
+    "comments": [
+      "HandleGetInternalMangaVolumeThumbnail serves the thumbnail (first page) of a CBZ volume for Internal Storage",
+      ""
+    ],
+    "filepath": "internal/handlers/manga.go",
+    "filename": "manga.go",
+    "api": {
+      "summary": "",
+      "descriptions": [],
+      "endpoint": "",
+      "methods": null,
+      "params": [],
+      "bodyFields": [],
+      "returns": "boolean",
+      "returnGoType": "boolean",
+      "returnTypescriptType": "boolean"
+    }
+  },
+  {
+    "name": "isImageFile",
+    "trimmedName": "isImageFile",
+    "comments": [
+      "Helper: isImageFile checks if a filename is an image",
+      ""
+    ],
+    "filepath": "internal/handlers/manga.go",
+    "filename": "manga.go",
+    "api": {
+      "summary": "",
+      "descriptions": [],
+      "endpoint": "",
+      "methods": null,
+      "params": [],
+      "bodyFields": [],
+      "returns": "boolean",
+      "returnGoType": "boolean",
+      "returnTypescriptType": "boolean"
+    }
+  },
+  {
+    "name": "readImageAsThumbnail",
+    "trimmedName": "readImageAsThumbnail",
+    "comments": [
+      "Helper: readImageAsThumbnail reads and encodes the image as a thumbnail (optionally resize, here just returns as is)",
+      ""
+    ],
+    "filepath": "internal/handlers/manga.go",
+    "filename": "manga.go",
+    "api": {
+      "summary": "",
+      "descriptions": [],
+      "endpoint": "",
+      "methods": null,
+      "params": [],
+      "bodyFields": [],
+      "returns": "boolean",
+      "returnGoType": "boolean",
+      "returnTypescriptType": "boolean"
+    }
+  },
+  {
     "name": "HandleDownloadMangaChapters",
     "trimmedName": "DownloadMangaChapters",
     "comments": [
@@ -5353,6 +5527,27 @@
       "returns": "[]manga.DownloadListItem",
       "returnGoType": "manga.DownloadListItem",
       "returnTypescriptType": "Array\u003cManga_DownloadListItem\u003e"
+    }
+  },
+  {
+    "name": "NewMangaImageHandler",
+    "trimmedName": "NewMangaImageHandler",
+    "comments": [
+      "NewMangaImageHandler creates a new manga image handler",
+      ""
+    ],
+    "filepath": "internal/handlers/manga_image.go",
+    "filename": "manga_image.go",
+    "api": {
+      "summary": "",
+      "descriptions": [],
+      "endpoint": "",
+      "methods": null,
+      "params": [],
+      "bodyFields": [],
+      "returns": "boolean",
+      "returnGoType": "boolean",
+      "returnTypescriptType": "boolean"
     }
   },
   {
@@ -5794,6 +5989,28 @@
       ],
       "returns": "bool",
       "returnGoType": "bool",
+      "returnTypescriptType": "boolean"
+    }
+  },
+  {
+    "name": "SessionMiddleware",
+    "trimmedName": "SessionMiddleware",
+    "comments": [
+      "SessionMiddleware checks if the user has a valid session",
+      "If not, it allows the request to continue but the frontend will handle the redirect",
+      ""
+    ],
+    "filepath": "internal/handlers/middleware.go",
+    "filename": "middleware.go",
+    "api": {
+      "summary": "",
+      "descriptions": [],
+      "endpoint": "",
+      "methods": null,
+      "params": [],
+      "bodyFields": [],
+      "returns": "boolean",
+      "returnGoType": "boolean",
       "returnTypescriptType": "boolean"
     }
   },
@@ -7933,6 +8150,28 @@
       "returns": "string",
       "returnGoType": "string",
       "returnTypescriptType": "string"
+    }
+  },
+  {
+    "name": "HandleTestSession",
+    "trimmedName": "TestSession",
+    "comments": [
+      "HandleTestSession is a test endpoint to verify that the session management is working",
+      "It returns the username of the current session if one exists",
+      ""
+    ],
+    "filepath": "internal/handlers/test_auth.go",
+    "filename": "test_auth.go",
+    "api": {
+      "summary": "",
+      "descriptions": [],
+      "endpoint": "",
+      "methods": null,
+      "params": [],
+      "bodyFields": [],
+      "returns": "boolean",
+      "returnGoType": "boolean",
+      "returnTypescriptType": "boolean"
     }
   },
   {

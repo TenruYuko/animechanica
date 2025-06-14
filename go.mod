@@ -60,6 +60,19 @@ require github.com/bmatcuk/doublestar/v4 v4.8.1
 require github.com/ncruces/go-dns v1.2.7
 
 require (
+	github.com/agnivade/levenshtein v1.1.1 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
+	github.com/gotk3/gotk3 v0.6.1 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/salviati/gomics v0.0.0-20250201200717-923b28072ee5 // indirect
+	github.com/urfave/cli/v2 v2.27.4 // indirect
+	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
+	golang.org/x/mod v0.22.0 // indirect
+	golang.org/x/tools v0.29.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
+)
+
+require (
 	github.com/99designs/gqlgen v0.17.54 // indirect
 	github.com/RoaringBitmap/roaring v1.2.3 // indirect
 	github.com/ajwerner/btree v0.0.0-20211221152037-f427b3e689c0 // indirect

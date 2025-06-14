@@ -607,6 +607,160 @@ export type AL_BaseManga_Title = {
 }
 
 /**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character = {
+    id: number
+    name?: AL_CharacterDetailsByID_Character_Name
+    image?: AL_CharacterDetailsByID_Character_Image
+    description?: string
+    dateOfBirth?: AL_CharacterDetailsByID_Character_DateOfBirth
+    gender?: string
+    age?: string
+    bloodType?: string
+    favourites?: number
+    siteUrl?: string
+    media?: AL_CharacterDetailsByID_Character_Media
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_DateOfBirth = {
+    year?: number
+    month?: number
+    day?: number
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Image = {
+    large?: string
+    medium?: string
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Media = {
+    edges?: Array<AL_CharacterDetailsByID_Character_Media_Edges>
+    pageInfo?: AL_CharacterDetailsByID_Character_Media_PageInfo
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Media_Edges = {
+    id?: number
+    characterRole?: AL_CharacterRole
+    node?: AL_CharacterDetailsByID_Character_Media_Edges_Node
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Media_Edges_Node = {
+    id: number
+    title?: AL_CharacterDetailsByID_Character_Media_Edges_Node_Title
+    coverImage?: AL_CharacterDetailsByID_Character_Media_Edges_Node_CoverImage
+    type?: AL_MediaType
+    format?: AL_MediaFormat
+    status?: AL_MediaStatus
+    startDate?: AL_CharacterDetailsByID_Character_Media_Edges_Node_StartDate
+    endDate?: AL_CharacterDetailsByID_Character_Media_Edges_Node_EndDate
+    season?: AL_MediaSeason
+    seasonYear?: number
+    episodes?: number
+    chapters?: number
+    volumes?: number
+    genres?: Array<string>
+    averageScore?: number
+    popularity?: number
+    favourites?: number
+    siteUrl?: string
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Media_Edges_Node_CoverImage = {
+    large?: string
+    medium?: string
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Media_Edges_Node_EndDate = {
+    year?: number
+    month?: number
+    day?: number
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Media_Edges_Node_StartDate = {
+    year?: number
+    month?: number
+    day?: number
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Media_Edges_Node_Title = {
+    romaji?: string
+    english?: string
+    native?: string
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Media_PageInfo = {
+    total?: number
+    currentPage?: number
+    lastPage?: number
+    hasNextPage?: boolean
+    perPage?: number
+}
+
+/**
+ * - Filepath: internal/api/anilist/client_gen.go
+ * - Filename: client_gen.go
+ * - Package: anilist
+ */
+export type AL_CharacterDetailsByID_Character_Name = {
+    full?: string
+    native?: string
+    alternative?: Array<string>
+}
+
+/**
  * - Filepath: internal/api/anilist/models_gen.go
  * - Filename: models_gen.go
  * - Package: anilist

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"os"
 	"runtime"
 	"seanime/internal/api/anilist"
@@ -22,6 +23,7 @@ import (
 	"seanime/internal/library/playbackmanager"
 	"seanime/internal/library/scanner"
 	"seanime/internal/manga"
+	manga_providers "seanime/internal/manga/providers"
 	"seanime/internal/mediaplayers/mediaplayer"
 	"seanime/internal/mediaplayers/mpchc"
 	"seanime/internal/mediaplayers/mpv"
@@ -41,6 +43,8 @@ import (
 	"seanime/internal/util"
 	"seanime/internal/util/filecache"
 	"sync"
+
+	"seanime/internal/extension"
 
 	"github.com/rs/zerolog"
 )
@@ -109,7 +113,7 @@ type (
 )
 
 // NewApp creates a new server instance
-func NewApp(configOpts *ConfigOptions, selfupdater *updater.SelfUpdater) *App {
+func NewApp(ctx context.Context, configOpts *ConfigOptions, selfupdater *updater.SelfUpdater) *App {
 
 	// Initialize logger with predefined format
 	logger := util.NewLogger()
@@ -206,6 +210,22 @@ func NewApp(configOpts *ConfigOptions, selfupdater *updater.SelfUpdater) *App {
 		FileCacher:     fileCacher,
 		HookManager:    hookManager,
 	})
+
+	// Register Internal Storage manga provider as a built-in extension
+	internalStorageProvider := manga_providers.NewInternalStorage(ctx, logger, "/media/manga")
+	// Force synchronous scan for internal storage provider
+	if isp, ok := internalStorageProvider.(*manga_providers.InternalStorageProvider); ok {
+		isp.BuildCacheSync()
+	}
+	internalStorageExtension := extension.Extension{
+		ID:          "internal-storage",
+		Name:        "Internal Storage",
+		Type:        extension.TypeMangaProvider,
+		Language:    extension.LanguageGo,
+		ManifestURI: "builtin",
+	}
+	extensionRepository.ReloadBuiltInExtension(internalStorageExtension, internalStorageProvider)
+
 	// Load extensions in background
 	go LoadExtensions(extensionRepository, logger)
 

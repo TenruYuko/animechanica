@@ -3,6 +3,7 @@
 package server
 
 import (
+	"context"
 	"embed"
 	"fmt"
 	"fyne.io/systray"
@@ -17,10 +18,13 @@ import (
 )
 
 func StartServer(webFS embed.FS, embeddedLogo []byte) {
+	// Create root context for Windows (no signal handling in systray version)
+	ctx := context.Background()
+	
 	onExit := func() {}
 	hideConsole()
 
-	app, flags, selfupdater := startApp(embeddedLogo)
+	app, flags, selfupdater := startApp(ctx, embeddedLogo)
 
 	// Blocks until systray.Quit() is called
 	systray.Run(onReady(&webFS, app, flags, selfupdater), onExit)
@@ -58,7 +62,7 @@ func onReady(webFS *embed.FS, app *core.App, flags core.SeanimeFlags, selfupdate
 			// Close the systray when the app exits
 			defer systray.Quit()
 
-			startAppLoop(webFS, app, flags, selfupdater)
+			startAppLoop(ctx, webFS, app, flags, selfupdater)
 		}()
 
 		go func() {

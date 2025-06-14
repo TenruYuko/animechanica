@@ -313,7 +313,6 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	//
 	// Manga
 	//
-
 	v1Manga := v1.Group("/manga")
 	v1Manga.POST("/anilist/collection", h.HandleGetAnilistMangaCollection)
 	v1Manga.GET("/anilist/collection/raw", h.HandleGetRawAnilistMangaCollection)
@@ -328,6 +327,23 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	v1Manga.POST("/chapters", h.HandleGetMangaEntryChapters)
 	v1Manga.POST("/pages", h.HandleGetMangaEntryPages)
 	v1Manga.POST("/update-progress", h.HandleUpdateMangaProgress)
+	// DISABLED: Internal storage manga reading functionality has been disabled
+	// v1Manga.GET("/internal/thumbnail/:mangaID/:volume", h.HandleGetInternalMangaVolumeThumbnail)
+	// Raw Unicode/UTF-8 image/page serving routes - DISABLED
+	// --- Unicode/UTF-8 path handling documentation ---
+	// All /internal/page/* and /internal/image/* routes below were designed to accept and serve RAW Unicode/UTF-8 path segments.
+	// No encoding/decoding or transformation was performed by the backend; all symbols were preserved as sent by the client.
+	// If the client sent percent-encoded paths, the handler would decode them to raw Unicode before lookup.
+	// This ensured robust support for manga/chapter/image names with any Unicode characters, including CJK, emoji, and symbols.
+	// Example: /api/v1/manga/internal/page/【Oshi no Ko】/【Oshi no Ko】 - Volume 014.cbz/Chapter_141/0225.jpg
+	// Example: /api/v1/manga/internal/page/Ai/Ai%20-%20Volume%20025.cbz/Chapter_150/0167.jpg
+	//
+	// If you need to serve images from short paths (e.g. /manga/Chapter_150/0167.jpg), you must implement a mapping or redirect to the full internal path.
+	//
+	// --- END Unicode/UTF-8 path handling documentation ---
+	// DISABLED: Internal storage manga reading has been disabled
+	// v1Manga.GET("/internal/page/*", h.HandleGetInternalMangaPage)
+	// v1Manga.GET("/internal/image/*", h.HandleGetInternalMangaImage)
 
 	v1Manga.GET("/downloaded-chapters/:id", h.HandleGetMangaEntryDownloadedChapters)
 	v1Manga.GET("/downloads", h.HandleGetMangaDownloadsList)
@@ -344,6 +360,14 @@ func InitRoutes(app *core.App, e *echo.Echo) {
 	v1Manga.POST("/manual-mapping", h.HandleMangaManualMapping)
 	v1Manga.POST("/get-mapping", h.HandleGetMangaMapping)
 	v1Manga.POST("/remove-mapping", h.HandleRemoveMangaMapping)
+
+	//
+	// Character
+	//
+
+	v1Character := v1.Group("/character")
+	v1Character.GET("/:id", h.HandleGetCharacterDetails)
+	v1Character.POST("/:id/media", h.HandleGetCharacterMedia)
 
 	//
 	// File Cache

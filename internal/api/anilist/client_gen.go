@@ -19,6 +19,8 @@ type GithubGraphQLClient interface {
 	AnimeDetailsByID(ctx context.Context, id *int, interceptors ...clientv2.RequestInterceptor) (*AnimeDetailsByID, error)
 	ListAnime(ctx context.Context, page *int, search *string, perPage *int, sort []*MediaSort, status []*MediaStatus, genres []*string, averageScoreGreater *int, season *MediaSeason, seasonYear *int, format *MediaFormat, isAdult *bool, interceptors ...clientv2.RequestInterceptor) (*ListAnime, error)
 	ListRecentAnime(ctx context.Context, page *int, perPage *int, airingAtGreater *int, airingAtLesser *int, notYetAired *bool, interceptors ...clientv2.RequestInterceptor) (*ListRecentAnime, error)
+	CharacterDetailsByID(ctx context.Context, id int, interceptors ...clientv2.RequestInterceptor) (*CharacterDetailsByID, error)
+	CharacterSimpleByID(ctx context.Context, id int, interceptors ...clientv2.RequestInterceptor) (*CharacterSimpleByID, error)
 	UpdateMediaListEntry(ctx context.Context, mediaID *int, status *MediaListStatus, scoreRaw *int, progress *int, startedAt *FuzzyDateInput, completedAt *FuzzyDateInput, interceptors ...clientv2.RequestInterceptor) (*UpdateMediaListEntry, error)
 	UpdateMediaListEntryProgress(ctx context.Context, mediaID *int, progress *int, status *MediaListStatus, interceptors ...clientv2.RequestInterceptor) (*UpdateMediaListEntryProgress, error)
 	DeleteEntry(ctx context.Context, mediaListEntryID *int, interceptors ...clientv2.RequestInterceptor) (*DeleteEntry, error)
@@ -4744,6 +4746,815 @@ func (t *ListRecentAnime_Page) GetAiringSchedules() []*ListRecentAnime_Page_Airi
 	return t.AiringSchedules
 }
 
+type CharacterDetailsByID_Character_Name struct {
+	Full        *string   "json:\"full,omitempty\" graphql:\"full\""
+	Native      *string   "json:\"native,omitempty\" graphql:\"native\""
+	Alternative []*string "json:\"alternative,omitempty\" graphql:\"alternative\""
+}
+
+func (t *CharacterDetailsByID_Character_Name) GetFull() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Name{}
+	}
+	return t.Full
+}
+func (t *CharacterDetailsByID_Character_Name) GetNative() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Name{}
+	}
+	return t.Native
+}
+func (t *CharacterDetailsByID_Character_Name) GetAlternative() []*string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Name{}
+	}
+	return t.Alternative
+}
+
+type CharacterDetailsByID_Character_Image struct {
+	Large  *string "json:\"large,omitempty\" graphql:\"large\""
+	Medium *string "json:\"medium,omitempty\" graphql:\"medium\""
+}
+
+func (t *CharacterDetailsByID_Character_Image) GetLarge() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Image{}
+	}
+	return t.Large
+}
+func (t *CharacterDetailsByID_Character_Image) GetMedium() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Image{}
+	}
+	return t.Medium
+}
+
+type CharacterDetailsByID_Character_DateOfBirth struct {
+	Year  *int "json:\"year,omitempty\" graphql:\"year\""
+	Month *int "json:\"month,omitempty\" graphql:\"month\""
+	Day   *int "json:\"day,omitempty\" graphql:\"day\""
+}
+
+func (t *CharacterDetailsByID_Character_DateOfBirth) GetYear() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_DateOfBirth{}
+	}
+	return t.Year
+}
+func (t *CharacterDetailsByID_Character_DateOfBirth) GetMonth() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_DateOfBirth{}
+	}
+	return t.Month
+}
+func (t *CharacterDetailsByID_Character_DateOfBirth) GetDay() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_DateOfBirth{}
+	}
+	return t.Day
+}
+
+type CharacterDetailsByID_Character_Media_Edges_Node_Title struct {
+	Romaji  *string "json:\"romaji,omitempty\" graphql:\"romaji\""
+	English *string "json:\"english,omitempty\" graphql:\"english\""
+	Native  *string "json:\"native,omitempty\" graphql:\"native\""
+}
+
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_Title) GetRomaji() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_Title{}
+	}
+	return t.Romaji
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_Title) GetEnglish() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_Title{}
+	}
+	return t.English
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_Title) GetNative() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_Title{}
+	}
+	return t.Native
+}
+
+type CharacterDetailsByID_Character_Media_Edges_Node_CoverImage struct {
+	Large  *string "json:\"large,omitempty\" graphql:\"large\""
+	Medium *string "json:\"medium,omitempty\" graphql:\"medium\""
+}
+
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_CoverImage) GetLarge() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_CoverImage{}
+	}
+	return t.Large
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_CoverImage) GetMedium() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_CoverImage{}
+	}
+	return t.Medium
+}
+
+type CharacterDetailsByID_Character_Media_Edges_Node_StartDate struct {
+	Year  *int "json:\"year,omitempty\" graphql:\"year\""
+	Month *int "json:\"month,omitempty\" graphql:\"month\""
+	Day   *int "json:\"day,omitempty\" graphql:\"day\""
+}
+
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_StartDate) GetYear() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_StartDate{}
+	}
+	return t.Year
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_StartDate) GetMonth() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_StartDate{}
+	}
+	return t.Month
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_StartDate) GetDay() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_StartDate{}
+	}
+	return t.Day
+}
+
+type CharacterDetailsByID_Character_Media_Edges_Node_EndDate struct {
+	Year  *int "json:\"year,omitempty\" graphql:\"year\""
+	Month *int "json:\"month,omitempty\" graphql:\"month\""
+	Day   *int "json:\"day,omitempty\" graphql:\"day\""
+}
+
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_EndDate) GetYear() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_EndDate{}
+	}
+	return t.Year
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_EndDate) GetMonth() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_EndDate{}
+	}
+	return t.Month
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node_EndDate) GetDay() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node_EndDate{}
+	}
+	return t.Day
+}
+
+type CharacterDetailsByID_Character_Media_Edges_Node struct {
+	ID           int                                                         "json:\"id\" graphql:\"id\""
+	Title        *CharacterDetailsByID_Character_Media_Edges_Node_Title      "json:\"title,omitempty\" graphql:\"title\""
+	CoverImage   *CharacterDetailsByID_Character_Media_Edges_Node_CoverImage "json:\"coverImage,omitempty\" graphql:\"coverImage\""
+	Type         *MediaType                                                  "json:\"type,omitempty\" graphql:\"type\""
+	Format       *MediaFormat                                                "json:\"format,omitempty\" graphql:\"format\""
+	Status       *MediaStatus                                                "json:\"status,omitempty\" graphql:\"status\""
+	StartDate    *CharacterDetailsByID_Character_Media_Edges_Node_StartDate  "json:\"startDate,omitempty\" graphql:\"startDate\""
+	EndDate      *CharacterDetailsByID_Character_Media_Edges_Node_EndDate    "json:\"endDate,omitempty\" graphql:\"endDate\""
+	Season       *MediaSeason                                                "json:\"season,omitempty\" graphql:\"season\""
+	SeasonYear   *int                                                        "json:\"seasonYear,omitempty\" graphql:\"seasonYear\""
+	Episodes     *int                                                        "json:\"episodes,omitempty\" graphql:\"episodes\""
+	Chapters     *int                                                        "json:\"chapters,omitempty\" graphql:\"chapters\""
+	Volumes      *int                                                        "json:\"volumes,omitempty\" graphql:\"volumes\""
+	Genres       []*string                                                   "json:\"genres,omitempty\" graphql:\"genres\""
+	AverageScore *int                                                        "json:\"averageScore,omitempty\" graphql:\"averageScore\""
+	Popularity   *int                                                        "json:\"popularity,omitempty\" graphql:\"popularity\""
+	Favourites   *int                                                        "json:\"favourites,omitempty\" graphql:\"favourites\""
+	SiteURL      *string                                                     "json:\"siteUrl,omitempty\" graphql:\"siteUrl\""
+}
+
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetID() int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.ID
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetTitle() *CharacterDetailsByID_Character_Media_Edges_Node_Title {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Title
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetCoverImage() *CharacterDetailsByID_Character_Media_Edges_Node_CoverImage {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.CoverImage
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetType() *MediaType {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Type
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetFormat() *MediaFormat {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Format
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetStatus() *MediaStatus {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Status
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetStartDate() *CharacterDetailsByID_Character_Media_Edges_Node_StartDate {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.StartDate
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetEndDate() *CharacterDetailsByID_Character_Media_Edges_Node_EndDate {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.EndDate
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetSeason() *MediaSeason {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Season
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetSeasonYear() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.SeasonYear
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetEpisodes() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Episodes
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetChapters() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Chapters
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetVolumes() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Volumes
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetGenres() []*string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Genres
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetAverageScore() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.AverageScore
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetPopularity() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Popularity
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetFavourites() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.Favourites
+}
+func (t *CharacterDetailsByID_Character_Media_Edges_Node) GetSiteURL() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges_Node{}
+	}
+	return t.SiteURL
+}
+
+type CharacterDetailsByID_Character_Media_Edges struct {
+	ID            *int                                             "json:\"id,omitempty\" graphql:\"id\""
+	CharacterRole *CharacterRole                                   "json:\"characterRole,omitempty\" graphql:\"characterRole\""
+	Node          *CharacterDetailsByID_Character_Media_Edges_Node "json:\"node,omitempty\" graphql:\"node\""
+}
+
+func (t *CharacterDetailsByID_Character_Media_Edges) GetID() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges{}
+	}
+	return t.ID
+}
+func (t *CharacterDetailsByID_Character_Media_Edges) GetCharacterRole() *CharacterRole {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges{}
+	}
+	return t.CharacterRole
+}
+func (t *CharacterDetailsByID_Character_Media_Edges) GetNode() *CharacterDetailsByID_Character_Media_Edges_Node {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_Edges{}
+	}
+	return t.Node
+}
+
+type CharacterDetailsByID_Character_Media_PageInfo struct {
+	Total       *int  "json:\"total,omitempty\" graphql:\"total\""
+	CurrentPage *int  "json:\"currentPage,omitempty\" graphql:\"currentPage\""
+	LastPage    *int  "json:\"lastPage,omitempty\" graphql:\"lastPage\""
+	HasNextPage *bool "json:\"hasNextPage,omitempty\" graphql:\"hasNextPage\""
+	PerPage     *int  "json:\"perPage,omitempty\" graphql:\"perPage\""
+}
+
+func (t *CharacterDetailsByID_Character_Media_PageInfo) GetTotal() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_PageInfo{}
+	}
+	return t.Total
+}
+func (t *CharacterDetailsByID_Character_Media_PageInfo) GetCurrentPage() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_PageInfo{}
+	}
+	return t.CurrentPage
+}
+func (t *CharacterDetailsByID_Character_Media_PageInfo) GetLastPage() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_PageInfo{}
+	}
+	return t.LastPage
+}
+func (t *CharacterDetailsByID_Character_Media_PageInfo) GetHasNextPage() *bool {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_PageInfo{}
+	}
+	return t.HasNextPage
+}
+func (t *CharacterDetailsByID_Character_Media_PageInfo) GetPerPage() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media_PageInfo{}
+	}
+	return t.PerPage
+}
+
+type CharacterDetailsByID_Character_Media struct {
+	Edges    []*CharacterDetailsByID_Character_Media_Edges  "json:\"edges,omitempty\" graphql:\"edges\""
+	PageInfo *CharacterDetailsByID_Character_Media_PageInfo "json:\"pageInfo,omitempty\" graphql:\"pageInfo\""
+}
+
+func (t *CharacterDetailsByID_Character_Media) GetEdges() []*CharacterDetailsByID_Character_Media_Edges {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media{}
+	}
+	return t.Edges
+}
+func (t *CharacterDetailsByID_Character_Media) GetPageInfo() *CharacterDetailsByID_Character_Media_PageInfo {
+	if t == nil {
+		t = &CharacterDetailsByID_Character_Media{}
+	}
+	return t.PageInfo
+}
+
+type CharacterDetailsByID_Character struct {
+	ID          int                                         "json:\"id\" graphql:\"id\""
+	Name        *CharacterDetailsByID_Character_Name        "json:\"name,omitempty\" graphql:\"name\""
+	Image       *CharacterDetailsByID_Character_Image       "json:\"image,omitempty\" graphql:\"image\""
+	Description *string                                     "json:\"description,omitempty\" graphql:\"description\""
+	DateOfBirth *CharacterDetailsByID_Character_DateOfBirth "json:\"dateOfBirth,omitempty\" graphql:\"dateOfBirth\""
+	Gender      *string                                     "json:\"gender,omitempty\" graphql:\"gender\""
+	Age         *string                                     "json:\"age,omitempty\" graphql:\"age\""
+	BloodType   *string                                     "json:\"bloodType,omitempty\" graphql:\"bloodType\""
+	Favourites  *int                                        "json:\"favourites,omitempty\" graphql:\"favourites\""
+	SiteURL     *string                                     "json:\"siteUrl,omitempty\" graphql:\"siteUrl\""
+	Media       *CharacterDetailsByID_Character_Media       "json:\"media,omitempty\" graphql:\"media\""
+}
+
+func (t *CharacterDetailsByID_Character) GetID() int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.ID
+}
+func (t *CharacterDetailsByID_Character) GetName() *CharacterDetailsByID_Character_Name {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.Name
+}
+func (t *CharacterDetailsByID_Character) GetImage() *CharacterDetailsByID_Character_Image {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.Image
+}
+func (t *CharacterDetailsByID_Character) GetDescription() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.Description
+}
+func (t *CharacterDetailsByID_Character) GetDateOfBirth() *CharacterDetailsByID_Character_DateOfBirth {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.DateOfBirth
+}
+func (t *CharacterDetailsByID_Character) GetGender() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.Gender
+}
+func (t *CharacterDetailsByID_Character) GetAge() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.Age
+}
+func (t *CharacterDetailsByID_Character) GetBloodType() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.BloodType
+}
+func (t *CharacterDetailsByID_Character) GetFavourites() *int {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.Favourites
+}
+func (t *CharacterDetailsByID_Character) GetSiteURL() *string {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.SiteURL
+}
+func (t *CharacterDetailsByID_Character) GetMedia() *CharacterDetailsByID_Character_Media {
+	if t == nil {
+		t = &CharacterDetailsByID_Character{}
+	}
+	return t.Media
+}
+
+type CharacterSimpleById_Character_Name struct {
+	First         *string   "json:\"first,omitempty\" graphql:\"first\""
+	Middle        *string   "json:\"middle,omitempty\" graphql:\"middle\""
+	Last          *string   "json:\"last,omitempty\" graphql:\"last\""
+	Full          *string   "json:\"full,omitempty\" graphql:\"full\""
+	Native        *string   "json:\"native,omitempty\" graphql:\"native\""
+	Alternative   []*string "json:\"alternative,omitempty\" graphql:\"alternative\""
+	UserPreferred *string   "json:\"userPreferred,omitempty\" graphql:\"userPreferred\""
+}
+
+func (t *CharacterSimpleById_Character_Name) GetFirst() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Name{}
+	}
+	return t.First
+}
+func (t *CharacterSimpleById_Character_Name) GetMiddle() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Name{}
+	}
+	return t.Middle
+}
+func (t *CharacterSimpleById_Character_Name) GetLast() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Name{}
+	}
+	return t.Last
+}
+func (t *CharacterSimpleById_Character_Name) GetFull() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Name{}
+	}
+	return t.Full
+}
+func (t *CharacterSimpleById_Character_Name) GetNative() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Name{}
+	}
+	return t.Native
+}
+func (t *CharacterSimpleById_Character_Name) GetAlternative() []*string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Name{}
+	}
+	return t.Alternative
+}
+func (t *CharacterSimpleById_Character_Name) GetUserPreferred() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Name{}
+	}
+	return t.UserPreferred
+}
+
+type CharacterSimpleById_Character_Image struct {
+	Large  *string "json:\"large,omitempty\" graphql:\"large\""
+	Medium *string "json:\"medium,omitempty\" graphql:\"medium\""
+}
+
+func (t *CharacterSimpleById_Character_Image) GetLarge() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Image{}
+	}
+	return t.Large
+}
+func (t *CharacterSimpleById_Character_Image) GetMedium() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Image{}
+	}
+	return t.Medium
+}
+
+type CharacterSimpleById_Character_DateOfBirth struct {
+	Year  *int "json:\"year,omitempty\" graphql:\"year\""
+	Month *int "json:\"month,omitempty\" graphql:\"month\""
+	Day   *int "json:\"day,omitempty\" graphql:\"day\""
+}
+
+func (t *CharacterSimpleById_Character_DateOfBirth) GetYear() *int {
+	if t == nil {
+		t = &CharacterSimpleById_Character_DateOfBirth{}
+	}
+	return t.Year
+}
+func (t *CharacterSimpleById_Character_DateOfBirth) GetMonth() *int {
+	if t == nil {
+		t = &CharacterSimpleById_Character_DateOfBirth{}
+	}
+	return t.Month
+}
+func (t *CharacterSimpleById_Character_DateOfBirth) GetDay() *int {
+	if t == nil {
+		t = &CharacterSimpleById_Character_DateOfBirth{}
+	}
+	return t.Day
+}
+
+type CharacterSimpleById_Character_Media_Edges_Node_Title struct {
+	UserPreferred *string "json:\"userPreferred,omitempty\" graphql:\"userPreferred\""
+	Romaji        *string "json:\"romaji,omitempty\" graphql:\"romaji\""
+	English       *string "json:\"english,omitempty\" graphql:\"english\""
+	Native        *string "json:\"native,omitempty\" graphql:\"native\""
+}
+
+func (t *CharacterSimpleById_Character_Media_Edges_Node_Title) GetUserPreferred() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node_Title{}
+	}
+	return t.UserPreferred
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node_Title) GetRomaji() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node_Title{}
+	}
+	return t.Romaji
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node_Title) GetEnglish() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node_Title{}
+	}
+	return t.English
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node_Title) GetNative() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node_Title{}
+	}
+	return t.Native
+}
+
+type CharacterSimpleById_Character_Media_Edges_Node_CoverImage struct {
+	Large  *string "json:\"large,omitempty\" graphql:\"large\""
+	Medium *string "json:\"medium,omitempty\" graphql:\"medium\""
+	Color  *string "json:\"color,omitempty\" graphql:\"color\""
+}
+
+func (t *CharacterSimpleById_Character_Media_Edges_Node_CoverImage) GetLarge() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node_CoverImage{}
+	}
+	return t.Large
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node_CoverImage) GetMedium() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node_CoverImage{}
+	}
+	return t.Medium
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node_CoverImage) GetColor() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node_CoverImage{}
+	}
+	return t.Color
+}
+
+type CharacterSimpleById_Character_Media_Edges_Node struct {
+	ID         int                                                        "json:\"id\" graphql:\"id\""
+	Title      *CharacterSimpleById_Character_Media_Edges_Node_Title      "json:\"title,omitempty\" graphql:\"title\""
+	Type       *MediaType                                                 "json:\"type,omitempty\" graphql:\"type\""
+	Format     *MediaFormat                                               "json:\"format,omitempty\" graphql:\"format\""
+	Status     *MediaStatus                                               "json:\"status,omitempty\" graphql:\"status\""
+	CoverImage *CharacterSimpleById_Character_Media_Edges_Node_CoverImage "json:\"coverImage,omitempty\" graphql:\"coverImage\""
+}
+
+func (t *CharacterSimpleById_Character_Media_Edges_Node) GetID() int {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node{}
+	}
+	return t.ID
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node) GetTitle() *CharacterSimpleById_Character_Media_Edges_Node_Title {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node{}
+	}
+	return t.Title
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node) GetType() *MediaType {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node{}
+	}
+	return t.Type
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node) GetFormat() *MediaFormat {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node{}
+	}
+	return t.Format
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node) GetStatus() *MediaStatus {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node{}
+	}
+	return t.Status
+}
+func (t *CharacterSimpleById_Character_Media_Edges_Node) GetCoverImage() *CharacterSimpleById_Character_Media_Edges_Node_CoverImage {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges_Node{}
+	}
+	return t.CoverImage
+}
+
+type CharacterSimpleById_Character_Media_Edges struct {
+	CharacterRole *CharacterRole                                  "json:\"characterRole,omitempty\" graphql:\"characterRole\""
+	Node          *CharacterSimpleById_Character_Media_Edges_Node "json:\"node,omitempty\" graphql:\"node\""
+}
+
+func (t *CharacterSimpleById_Character_Media_Edges) GetCharacterRole() *CharacterRole {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges{}
+	}
+	return t.CharacterRole
+}
+func (t *CharacterSimpleById_Character_Media_Edges) GetNode() *CharacterSimpleById_Character_Media_Edges_Node {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_Edges{}
+	}
+	return t.Node
+}
+
+type CharacterSimpleById_Character_Media_PageInfo struct {
+	Total       *int  "json:\"total,omitempty\" graphql:\"total\""
+	CurrentPage *int  "json:\"currentPage,omitempty\" graphql:\"currentPage\""
+	LastPage    *int  "json:\"lastPage,omitempty\" graphql:\"lastPage\""
+	HasNextPage *bool "json:\"hasNextPage,omitempty\" graphql:\"hasNextPage\""
+	PerPage     *int  "json:\"perPage,omitempty\" graphql:\"perPage\""
+}
+
+func (t *CharacterSimpleById_Character_Media_PageInfo) GetTotal() *int {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_PageInfo{}
+	}
+	return t.Total
+}
+func (t *CharacterSimpleById_Character_Media_PageInfo) GetCurrentPage() *int {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_PageInfo{}
+	}
+	return t.CurrentPage
+}
+func (t *CharacterSimpleById_Character_Media_PageInfo) GetLastPage() *int {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_PageInfo{}
+	}
+	return t.LastPage
+}
+func (t *CharacterSimpleById_Character_Media_PageInfo) GetHasNextPage() *bool {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_PageInfo{}
+	}
+	return t.HasNextPage
+}
+func (t *CharacterSimpleById_Character_Media_PageInfo) GetPerPage() *int {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media_PageInfo{}
+	}
+	return t.PerPage
+}
+
+type CharacterSimpleById_Character_Media struct {
+	Edges    []*CharacterSimpleById_Character_Media_Edges  "json:\"edges,omitempty\" graphql:\"edges\""
+	PageInfo *CharacterSimpleById_Character_Media_PageInfo "json:\"pageInfo,omitempty\" graphql:\"pageInfo\""
+}
+
+func (t *CharacterSimpleById_Character_Media) GetEdges() []*CharacterSimpleById_Character_Media_Edges {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media{}
+	}
+	return t.Edges
+}
+func (t *CharacterSimpleById_Character_Media) GetPageInfo() *CharacterSimpleById_Character_Media_PageInfo {
+	if t == nil {
+		t = &CharacterSimpleById_Character_Media{}
+	}
+	return t.PageInfo
+}
+
+type CharacterSimpleById_Character struct {
+	ID          int                                        "json:\"id\" graphql:\"id\""
+	Name        *CharacterSimpleById_Character_Name        "json:\"name,omitempty\" graphql:\"name\""
+	Image       *CharacterSimpleById_Character_Image       "json:\"image,omitempty\" graphql:\"image\""
+	Description *string                                    "json:\"description,omitempty\" graphql:\"description\""
+	Gender      *string                                    "json:\"gender,omitempty\" graphql:\"gender\""
+	DateOfBirth *CharacterSimpleById_Character_DateOfBirth "json:\"dateOfBirth,omitempty\" graphql:\"dateOfBirth\""
+	Age         *string                                    "json:\"age,omitempty\" graphql:\"age\""
+	BloodType   *string                                    "json:\"bloodType,omitempty\" graphql:\"bloodType\""
+	SiteURL     *string                                    "json:\"siteUrl,omitempty\" graphql:\"siteUrl\""
+	Favourites  *int                                       "json:\"favourites,omitempty\" graphql:\"favourites\""
+	Media       *CharacterSimpleById_Character_Media       "json:\"media,omitempty\" graphql:\"media\""
+}
+
+func (t *CharacterSimpleById_Character) GetID() int {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.ID
+}
+func (t *CharacterSimpleById_Character) GetName() *CharacterSimpleById_Character_Name {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.Name
+}
+func (t *CharacterSimpleById_Character) GetImage() *CharacterSimpleById_Character_Image {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.Image
+}
+func (t *CharacterSimpleById_Character) GetDescription() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.Description
+}
+func (t *CharacterSimpleById_Character) GetGender() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.Gender
+}
+func (t *CharacterSimpleById_Character) GetDateOfBirth() *CharacterSimpleById_Character_DateOfBirth {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.DateOfBirth
+}
+func (t *CharacterSimpleById_Character) GetAge() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.Age
+}
+func (t *CharacterSimpleById_Character) GetBloodType() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.BloodType
+}
+func (t *CharacterSimpleById_Character) GetSiteURL() *string {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.SiteURL
+}
+func (t *CharacterSimpleById_Character) GetFavourites() *int {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.Favourites
+}
+func (t *CharacterSimpleById_Character) GetMedia() *CharacterSimpleById_Character_Media {
+	if t == nil {
+		t = &CharacterSimpleById_Character{}
+	}
+	return t.Media
+}
+
 type UpdateMediaListEntry_SaveMediaListEntry struct {
 	ID int "json:\"id\" graphql:\"id\""
 }
@@ -6763,6 +7574,28 @@ func (t *ListRecentAnime) GetPage() *ListRecentAnime_Page {
 	return t.Page
 }
 
+type CharacterDetailsByID struct {
+	Character *CharacterDetailsByID_Character "json:\"Character,omitempty\" graphql:\"Character\""
+}
+
+func (t *CharacterDetailsByID) GetCharacter() *CharacterDetailsByID_Character {
+	if t == nil {
+		t = &CharacterDetailsByID{}
+	}
+	return t.Character
+}
+
+type CharacterSimpleByID struct {
+	Character *CharacterSimpleById_Character "json:\"Character,omitempty\" graphql:\"Character\""
+}
+
+func (t *CharacterSimpleByID) GetCharacter() *CharacterSimpleById_Character {
+	if t == nil {
+		t = &CharacterSimpleByID{}
+	}
+	return t.Character
+}
+
 type UpdateMediaListEntry struct {
 	SaveMediaListEntry *UpdateMediaListEntry_SaveMediaListEntry "json:\"SaveMediaListEntry,omitempty\" graphql:\"SaveMediaListEntry\""
 }
@@ -7921,6 +8754,175 @@ func (c *Client) ListRecentAnime(ctx context.Context, page *int, perPage *int, a
 	return &res, nil
 }
 
+const CharacterDetailsByIDDocument = `query CharacterDetailsByID ($id: Int!) {
+	Character(id: $id) {
+		id
+		name {
+			full
+			native
+			alternative
+		}
+		image {
+			large
+			medium
+		}
+		description
+		dateOfBirth {
+			year
+			month
+			day
+		}
+		gender
+		age
+		bloodType
+		favourites
+		siteUrl
+		media(page: 1, perPage: 25) {
+			edges {
+				id
+				characterRole
+				node {
+					id
+					title {
+						romaji
+						english
+						native
+					}
+					coverImage {
+						large
+						medium
+					}
+					type
+					format
+					status
+					startDate {
+						year
+						month
+						day
+					}
+					endDate {
+						year
+						month
+						day
+					}
+					season
+					seasonYear
+					episodes
+					chapters
+					volumes
+					genres
+					averageScore
+					popularity
+					favourites
+					siteUrl
+				}
+			}
+			pageInfo {
+				total
+				currentPage
+				lastPage
+				hasNextPage
+				perPage
+			}
+		}
+	}
+}
+`
+
+func (c *Client) CharacterDetailsByID(ctx context.Context, id int, interceptors ...clientv2.RequestInterceptor) (*CharacterDetailsByID, error) {
+	vars := map[string]any{
+		"id": id,
+	}
+
+	var res CharacterDetailsByID
+	if err := c.Client.Post(ctx, "CharacterDetailsByID", CharacterDetailsByIDDocument, &res, vars, interceptors...); err != nil {
+		if c.Client.ParseDataWhenErrors {
+			return &res, err
+		}
+
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+const CharacterSimpleByIDDocument = `query CharacterSimpleById ($id: Int!) {
+	Character(id: $id) {
+		id
+		name {
+			first
+			middle
+			last
+			full
+			native
+			alternative
+			userPreferred
+		}
+		image {
+			large
+			medium
+		}
+		description
+		gender
+		dateOfBirth {
+			year
+			month
+			day
+		}
+		age
+		bloodType
+		siteUrl
+		favourites
+		media(page: 1, perPage: 10) {
+			edges {
+				characterRole
+				node {
+					id
+					title {
+						userPreferred
+						romaji
+						english
+						native
+					}
+					type
+					format
+					status
+					coverImage {
+						large
+						medium
+						color
+					}
+				}
+			}
+			pageInfo {
+				total
+				currentPage
+				lastPage
+				hasNextPage
+				perPage
+			}
+		}
+	}
+}
+`
+
+func (c *Client) CharacterSimpleByID(ctx context.Context, id int, interceptors ...clientv2.RequestInterceptor) (*CharacterSimpleByID, error) {
+	vars := map[string]any{
+		"id": id,
+	}
+
+	var res CharacterSimpleByID
+	if err := c.Client.Post(ctx, "CharacterSimpleById", CharacterSimpleByIDDocument, &res, vars, interceptors...); err != nil {
+		if c.Client.ParseDataWhenErrors {
+			return &res, err
+		}
+
+		return nil, err
+	}
+
+	return &res, nil
+}
+
 const UpdateMediaListEntryDocument = `mutation UpdateMediaListEntry ($mediaId: Int, $status: MediaListStatus, $scoreRaw: Int, $progress: Int, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput) {
 	SaveMediaListEntry(mediaId: $mediaId, status: $status, scoreRaw: $scoreRaw, progress: $progress, startedAt: $startedAt, completedAt: $completedAt) {
 		id
@@ -8757,6 +9759,8 @@ var DocumentOperationNames = map[string]string{
 	AnimeDetailsByIDDocument:             "AnimeDetailsById",
 	ListAnimeDocument:                    "ListAnime",
 	ListRecentAnimeDocument:              "ListRecentAnime",
+	CharacterDetailsByIDDocument:         "CharacterDetailsByID",
+	CharacterSimpleByIDDocument:          "CharacterSimpleById",
 	UpdateMediaListEntryDocument:         "UpdateMediaListEntry",
 	UpdateMediaListEntryProgressDocument: "UpdateMediaListEntryProgress",
 	DeleteEntryDocument:                  "DeleteEntry",

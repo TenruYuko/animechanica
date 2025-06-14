@@ -49,9 +49,9 @@ elif [ -f "/mullvad/mullvad_ca.crt" ] && [ -f "/mullvad/mullvad_userpass.txt" ] 
     log "Error: Failed to start OpenVPN. Continuing without VPN."
   }
   
-  # Wait for VPN connection
-  log "Waiting for VPN to connect..."
-  sleep 10
+  # Remove or comment out any lines like:
+  # log "Waiting for VPN to connect..."
+  # sleep 10
   
   # Verify VPN connection
   if ip addr show tun0 > /dev/null 2>&1; then
@@ -72,38 +72,14 @@ log "Starting qBittorrent..."
 qbittorrent-nox --webui-port=8085 --profile=/root/.config/qBittorrent &
 QBITTORRENT_PID=$!
 
-# Wait for qBittorrent to start
-log "Waiting for qBittorrent to start..."
-sleep 5
-
-# Check if qBittorrent is running
+# Optionally, you can check if qBittorrent started, but do not wait
 if kill -0 $QBITTORRENT_PID 2>/dev/null; then
   log "qBittorrent started successfully on port 8085"
-  
-  # Wait a bit more for qBittorrent to fully initialize
-  sleep 2
-  
-  # Verify qBittorrent is responding
-  if curl -s -f http://127.0.0.1:8085 > /dev/null; then
-    log "qBittorrent WebUI is accessible"
-  else
-    log "Warning: qBittorrent WebUI may not be accessible, but continuing anyway"
-  fi
 else
   log "Warning: qBittorrent may have failed to start. Continuing anyway..."
 fi
 
-# Start Seanime
+# Start Seanime as PID 1 so it receives signals directly
 log "Starting Seanime..."
 cd /usr/local/bin
-
-# Start Seanime with proper error handling
-./seanime -datadir /data || {
-  log "Error: Seanime failed to start or crashed. Attempting to restart..."
-  sleep 5
-  ./seanime -datadir /data || log "Error: Seanime failed to start after retry."
-}
-
-# Keep container running if Seanime exits
-log "Seanime process exited. Keeping container alive..."
-tail -f /dev/null
+exec ./seanime -datadir /data

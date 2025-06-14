@@ -6,6 +6,7 @@ import (
 	"seanime/internal/extension"
 	"seanime/internal/manga/providers"
 	"seanime/internal/util"
+	"strings"
 	"sync"
 
 	hibikemanga "seanime/internal/extension/hibike/manga"
@@ -112,14 +113,35 @@ func (r *Repository) GetMangaPageContainer(
 	// Get the chapter from the container
 	var chapter *hibikemanga.ChapterDetails
 	for _, c := range chapterContainer.Chapters {
+		r.logger.Info().Msgf("manga: Checking chapter: ", c)
 		if c.ID == chapterId {
 			chapter = c
 			break
 		}
 	}
 
+	// Fallback for internal storage: if exact match not found, try to find by suffix
+	if chapter == nil && provider == "internal-storage" {
+		r.logger.Info().Msgf("manga: Chapter exact match failed for '%s', trying suffix match. Available chapters:", chapterId)
+		for i, c := range chapterContainer.Chapters {
+			r.logger.Info().Msgf("manga: Chapter[%d]: ID='%s', Title='%s'", i, c.ID, c.Title)
+		}
+		
+		for _, c := range chapterContainer.Chapters {
+			if strings.HasSuffix(c.ID, "/"+chapterId) {
+				r.logger.Info().Msgf("manga: Found chapter by suffix match: %s -> %s", chapterId, c.ID)
+				chapter = c
+				break
+			}
+		}
+		
+		if chapter == nil {
+			r.logger.Info().Msgf("manga: Suffix match also failed for: %s", chapterId)
+		}
+	}
+
 	if chapter == nil {
-		r.logger.Error().Msg("manga: Chapter not found")
+		r.logger.Error().Msgf("manga: Chapter not found: %s", chapterId)
 		return nil, ErrChapterNotFound
 	}
 

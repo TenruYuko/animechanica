@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"net/http"
 	"seanime/internal/api/anilist"
 	"seanime/internal/manga"
 	"seanime/internal/util/result"
@@ -552,3 +553,31 @@ func (h *Handler) HandleRemoveMangaMapping(c echo.Context) error {
 
 	return h.RespondWithData(c, true)
 }
+
+// HandleGetInternalMangaVolumeThumbnail - Internal storage thumbnail reading is disabled
+func (h *Handler) HandleGetInternalMangaVolumeThumbnail(c echo.Context) error {
+	// Internal storage manga thumbnail reading has been disabled
+	h.App.Logger.Debug().Msgf("HandleGetInternalMangaVolumeThumbnail: Internal storage thumbnail reading is disabled")
+	
+	// Return 404 to indicate the resource is not available
+	return c.NoContent(http.StatusNotFound)
+}
+
+// HandleGetInternalMangaPage - Internal storage manga reading is disabled
+// Path format: /manga/internal/page/{mangaDir}/{cbzFile}/{imagePath}
+func (h *Handler) HandleGetInternalMangaPage(c echo.Context) error {
+	// Internal storage manga reading has been disabled
+	// The internal storage provider remains available as a source but pages cannot be read
+	h.App.Logger.Debug().Msgf("HandleGetInternalMangaPage: Internal storage manga reading is disabled")
+	
+	// Return 404 to indicate the resource is not available for reading
+	return c.NoContent(http.StatusNotFound)
+}
+
+// HandleGetInternalMangaImage - Internal storage manga reading is disabled
+// This is an alias for HandleGetInternalMangaPage for compatibility
+func (h *Handler) HandleGetInternalMangaImage(c echo.Context) error {
+	return h.HandleGetInternalMangaPage(c)
+}
+
+

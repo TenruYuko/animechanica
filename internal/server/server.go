@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"embed"
 	"fmt"
 	golog "log"
@@ -17,7 +18,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func startApp(embeddedLogo []byte) (*core.App, core.SeanimeFlags, *updater.SelfUpdater) {
+func startApp(ctx context.Context, embeddedLogo []byte) (*core.App, core.SeanimeFlags, *updater.SelfUpdater) {
 	// Print the header
 	core.PrintHeader()
 
@@ -27,7 +28,7 @@ func startApp(embeddedLogo []byte) (*core.App, core.SeanimeFlags, *updater.SelfU
 	selfupdater := updater.NewSelfUpdater()
 
 	// Create the app instance
-	app := core.NewApp(&core.ConfigOptions{
+	app := core.NewApp(ctx, &core.ConfigOptions{
 		DataDir:          flags.DataDir,
 		EmbeddedLogo:     embeddedLogo,
 		IsDesktopSidecar: flags.IsDesktopSidecar,
@@ -64,7 +65,7 @@ func startApp(embeddedLogo []byte) (*core.App, core.SeanimeFlags, *updater.SelfU
 	return app, flags, selfupdater
 }
 
-func startAppLoop(webFS *embed.FS, app *core.App, flags core.SeanimeFlags, selfupdater *updater.SelfUpdater) {
+func startAppLoop(ctx context.Context, webFS *embed.FS, app *core.App, flags core.SeanimeFlags, selfupdater *updater.SelfUpdater) {
 	updateMode := flags.Update
 
 appLoop:

@@ -18,7 +18,7 @@ func TestGetMockAnilistClient() AnilistClient {
 }
 
 // MockAnilistClientImpl is a mock implementation of the AnilistClient, used for tests.
-// It uses the real implementation of the AnilistClient to make requests then populates a cache with the results.
+// It uses the real implementation of the AnilistClient to make requests then populates a cache with the resultfunc (mock *MockAnilistClient) CharacterDetailsByID(ctx context.Context, id int, interceptors ...clientv2.RequestInterceptor) (*CharacterDetailsByID, error) {.
 // This is to avoid making repeated requests to the AniList API during tests but still have realistic data.
 type MockAnilistClientImpl struct {
 	realAnilistClient AnilistClient
@@ -551,4 +551,9 @@ func (ac *MockAnilistClientImpl) ViewerStats(ctx context.Context, interceptors .
 func (ac *MockAnilistClientImpl) SearchBaseAnimeByIds(ctx context.Context, ids []*int, page *int, perPage *int, status []*MediaStatus, inCollection *bool, sort []*MediaSort, season *MediaSeason, year *int, genre *string, format *MediaFormat, interceptors ...clientv2.RequestInterceptor) (*SearchBaseAnimeByIds, error) {
 	ac.logger.Debug().Msg("anilist: Searching anime by ids")
 	return ac.realAnilistClient.SearchBaseAnimeByIds(ctx, ids, page, perPage, status, inCollection, sort, season, year, genre, format, interceptors...)
+}
+
+func (ac *MockAnilistClientImpl) CharacterDetailsByID(ctx context.Context, id int, interceptors ...clientv2.RequestInterceptor) (*CharacterDetailsByID, error) {
+	ac.logger.Debug().Int("characterId", id).Msg("anilist: Fetching character details")
+	return ac.realAnilistClient.CharacterDetailsByID(ctx, id, interceptors...)
 }

@@ -116,7 +116,9 @@ export function DownloadedChapterList(props: DownloadedChapterListProps) {
                                 React.startTransition(() => {
                                     // Set the selected chapter
                                     setCurrentChapter({
-                                        chapterId: row.original.chapterId,
+                                        chapterId: row.original.provider === "internal-storage" && !row.original.chapterId.includes("/")
+                                            ? `${(entry.media?.title?.romaji || entry.mediaId)}/${row.original.chapterId}`
+                                            : row.original.chapterId,
                                         chapterNumber: row.original.chapterNumber,
                                         provider: row.original.provider,
                                         mediaId: Number(entry.mediaId),

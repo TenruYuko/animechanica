@@ -39,7 +39,11 @@ func (s *StreamSB) Extract(uri string) (vs []*hibikeonlinestream.VideoSource, er
 
 	var ret []*hibikeonlinestream.VideoSource
 
-	id := strings.Split(uri, "/e/")[1]
+	split := strings.Split(uri, "/e/")
+	if len(split) < 2 {
+		return nil, errors.New("cannot extract ID from uri: missing /e/")
+	}
+	id := split[1]
 	if strings.Contains(id, "html") {
 		id = strings.Split(id, ".html")[0]
 	}

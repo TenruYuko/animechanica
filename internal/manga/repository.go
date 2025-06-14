@@ -10,6 +10,7 @@ import (
 	"seanime/internal/database/db"
 	"seanime/internal/events"
 	"seanime/internal/extension"
+	manga_providers "seanime/internal/manga/providers"
 	"seanime/internal/util/filecache"
 	"strconv"
 	"strings"
@@ -81,6 +82,32 @@ func (r *Repository) RemoveProvider(id string) {
 
 func (r *Repository) GetProviderExtensionBank() *extension.UnifiedBank {
 	return r.providerExtensionBank
+}
+
+// GetInternalStorageProvider returns the internal storage provider for handling local manga files
+// Returns nil if the internal storage provider is not found or not available
+func (r *Repository) GetInternalStorageProvider() *manga_providers.InternalStorageProvider {
+	if r.providerExtensionBank == nil {
+		return nil
+	}
+	
+	// Get the internal storage extension from the bank
+	providerExtension, ok := extension.GetExtension[extension.MangaProviderExtension](r.providerExtensionBank, "internal-storage")
+	if !ok {
+		r.logger.Debug().Msg("manga: Internal storage provider extension not found")
+		return nil
+	}
+	
+	// Extract the underlying provider implementation
+	provider := providerExtension.GetProvider()
+	
+	// Type assert to the internal storage provider type
+	if internalProvider, ok := provider.(*manga_providers.InternalStorageProvider); ok {
+		return internalProvider
+	}
+	
+	r.logger.Debug().Msg("manga: Internal storage provider found but type assertion failed")
+	return nil
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
